@@ -6,7 +6,15 @@ using TMPro;
 public class CanvasController : MonoBehaviour
 {
     public static int TotalGold = 0;
-    public GameObject GoldText;
+    public GameObject SpawnPoint;
+    public GameObject GreenEnemy;
+
+    private GameObject GoldText;
+    
+    void Start()
+    {
+        GoldText = gameObject.transform.Find("GoldText").gameObject;
+    }
 
     public static void AddGold(int amount) 
     {
@@ -16,5 +24,10 @@ public class CanvasController : MonoBehaviour
     void Update()
     {
         GoldText.GetComponent<TextMeshProUGUI>().text = $"Gold: {TotalGold}";
+    }
+
+    public void SpawnEnemy()
+    {
+        Instantiate(GreenEnemy, SpawnPoint.transform.position, Quaternion.identity);
     }
 }
