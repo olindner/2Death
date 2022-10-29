@@ -15,8 +15,6 @@ public class GreenEnemyController : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log("Killed");
-
         CanvasController.AddGold(goldWorth);
 
         Destroy(gameObject);
