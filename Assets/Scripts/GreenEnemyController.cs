@@ -15,7 +15,7 @@ public class GreenEnemyController : MonoBehaviour
 
     void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, targetPoint.transform.position, Speed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, targetPoint.transform.position, Speed * Time.deltaTime);
     }
 
     void OnMouseDown()
@@ -25,8 +25,6 @@ public class GreenEnemyController : MonoBehaviour
 
     void OnTriggerEnter2D (Collider2D coll)
     {
-        Debug.Log("Collided Green");
-        //Switch statement on enemy attack?
         Destroy(coll.gameObject);
         Die();
     }
