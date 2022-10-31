@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7029755065695589426}
   - component: {fileID: 9161937116866397095}
   - component: {fileID: 2122531498622882046}
+  - component: {fileID: -4204736373216440103}
   m_Layer: 0
   m_Name: BlueBall
   m_TagString: Untagged
@@ -97,4 +98,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd074599f5c74c0f95c23ed3526c733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 1
+  Speed: 3
+--- !u!58 &-4204736373216440103
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4765410579470945132}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.8

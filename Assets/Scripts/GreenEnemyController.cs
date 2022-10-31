@@ -13,18 +13,28 @@ public class GreenEnemyController : MonoBehaviour
         targetPoint = GameObject.Find("TargetPoint");
     }
 
-    void OnMouseDown()
-    {
-        CanvasController.GlobalTarget = gameObject;
-        // var activeProjectiles = GameObject.FindGameObjectsWithTag("projectile");
-        // foreach (var ap in activeProjectiles)
-        // {
-        //     ap.GetComponent<Projectile>().ShootTowards(transform.position);
-        // }
-    }
-
     void Update()
     {
         transform.position = Vector3.Lerp(transform.position, targetPoint.transform.position, Speed * Time.deltaTime);
+    }
+
+    void OnMouseDown()
+    {
+        CanvasController.GlobalTarget = gameObject;
+    }
+
+    void OnTriggerEnter2D (Collider2D coll)
+    {
+        Debug.Log("Collided Green");
+        //Switch statement on enemy attack?
+        Destroy(coll.gameObject);
+        Die();
+    }
+
+    void Die()
+    {
+        CanvasController.AddGold(goldWorth);
+        CanvasController.ResetTarget();
+        Destroy(gameObject);
     }
 }

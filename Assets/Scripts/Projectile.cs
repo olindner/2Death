@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float Speed = 1f;
+    public float Speed = 3f;
 
     void Update()
     {
-        if (CanvasController.GlobalTarget == null) return;
-        
-        Debug.Log("Proj updating");
-        transform.position = Vector3.Lerp(transform.position, CanvasController.GlobalTarget.transform.position, Speed * Time.deltaTime);
+        if (CanvasController.GlobalTarget == null) 
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        transform.position = Vector2.MoveTowards(transform.position, CanvasController.GlobalTarget.transform.position, Speed * Time.deltaTime);
     }
 }
