@@ -8,6 +8,7 @@ public class CanvasController : MonoBehaviour
     public static int TotalGold = 0;
     public GameObject SpawnPoint;
     public GameObject GreenEnemy;
+    public static GameObject GlobalTarget;
 
     private GameObject GoldText;
     

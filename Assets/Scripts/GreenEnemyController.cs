@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GreenEnemyController : MonoBehaviour
 {
-    public float Speed = 0.5f;
+    public float Speed = 0.1f;
     private GameObject targetPoint;
     private int goldWorth = 5;
 
@@ -15,9 +15,12 @@ public class GreenEnemyController : MonoBehaviour
 
     void OnMouseDown()
     {
-        CanvasController.AddGold(goldWorth);
-
-        Destroy(gameObject);
+        CanvasController.GlobalTarget = gameObject;
+        // var activeProjectiles = GameObject.FindGameObjectsWithTag("projectile");
+        // foreach (var ap in activeProjectiles)
+        // {
+        //     ap.GetComponent<Projectile>().ShootTowards(transform.position);
+        // }
     }
 
     void Update()
