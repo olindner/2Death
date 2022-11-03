@@ -2,15 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class CanvasController : MonoBehaviour
 {
     public static int TotalGold = 0;
-    public GameObject SpawnPoint;
-    public GameObject GreenEnemy;
     public static GameObject GlobalTarget;
 
+    public GameObject SpawnPoint;
+    public GameObject GreenEnemy;
+    public GameObject MenuPanel;
+    public GameObject TurretPrefab;
+    public List<GameObject> TurretPlacements = new List<GameObject>();
+
     private static GameObject GoldText;
+    private List<GameObject> Turrets = new List<GameObject>();
     
     void Start()
     {
@@ -31,5 +37,23 @@ public class CanvasController : MonoBehaviour
     public void SpawnEnemy()
     {
         Instantiate(GreenEnemy, SpawnPoint.transform.position, Quaternion.identity);
+    }
+
+    public void OpenMenu()
+    {
+        if (MenuPanel.activeSelf) MenuPanel.SetActive(false);
+        else MenuPanel.SetActive(true);
+    }
+
+    public void BuildTurret()
+    {
+        // Check if enough money
+
+        // Check which placement spot to use
+        var turrentIndexToAdd = Turrets.Count;
+        if (turrentIndexToAdd >= 3) return;
+        
+        var newTurret = Instantiate(TurretPrefab, TurretPlacements[turrentIndexToAdd].transform.position, TurretPrefab.transform.rotation);
+        Turrets.Add(newTurret);
     }
 }
