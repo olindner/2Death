@@ -20,16 +20,12 @@ public class CanvasController : MonoBehaviour
     public static void AddGold(int amount) 
     {
         TotalGold += amount;
+        GoldText.GetComponent<TextMeshProUGUI>().text = $"Gold: {TotalGold}";
     }
 
     public static void ResetTarget()
     {
         GlobalTarget = null;
-    }
-
-    void Update()
-    {
-        GoldText.GetComponent<TextMeshProUGUI>().text = $"Gold: {TotalGold}";
     }
 
     public void SpawnEnemy()
