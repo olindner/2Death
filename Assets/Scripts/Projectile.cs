@@ -14,6 +14,6 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        transform.position = Vector2.MoveTowards(transform.position, CanvasController.GlobalTarget.transform.position, Speed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, CanvasController.GlobalTarget.transform.GetComponent<Renderer>().bounds.center, Speed * Time.deltaTime);
     }
 }

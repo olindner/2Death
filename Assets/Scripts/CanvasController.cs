@@ -10,7 +10,7 @@ public class CanvasController : MonoBehaviour
     public GameObject GreenEnemy;
     public static GameObject GlobalTarget;
 
-    private GameObject GoldText;
+    private static GameObject GoldText;
     
     void Start()
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GreenEnemyController : MonoBehaviour
 {
-    public float Speed = 0.1f;
+    public float Speed = 0.3f;
     private GameObject targetPoint;
     private int goldWorth = 5;
 
