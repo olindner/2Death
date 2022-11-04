@@ -24,7 +24,7 @@ public class CanvasController : MonoBehaviour
     void Start()
     {
         GoldText = gameObject.transform.Find("GoldText").gameObject;
-        WaveText = gameObject.transform.Find("WaveText").gameObject;
+        // WaveText = gameObject.transform.Find("WaveText").gameObject;
     }
 
     public static void AddGold(int amount) 
@@ -61,8 +61,8 @@ public class CanvasController : MonoBehaviour
         Turrets.Add(newTurret);
     }
 
-    IEnumerator SpawnWave(int numberOfEnemies)
-    {
-        
-    }
+    // IEnumerator SpawnWave(int numberOfEnemies)
+    // {
+
+    // }
 }
