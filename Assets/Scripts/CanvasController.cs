@@ -9,18 +9,22 @@ public class CanvasController : MonoBehaviour
     public static int TotalGold = 0;
     public static GameObject GlobalTarget;
 
+    public List<GameObject> TurretPlacements = new List<GameObject>();
+    public GameObject TurretPrefab;
     public GameObject SpawnPoint;
     public GameObject GreenEnemy;
     public GameObject MenuPanel;
-    public GameObject TurretPrefab;
-    public List<GameObject> TurretPlacements = new List<GameObject>();
 
-    private static GameObject GoldText;
     private List<GameObject> Turrets = new List<GameObject>();
+    private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25};
+    private static GameObject GoldText;
+    private static GameObject WaveText;
+    private int waveNumber = 1;
     
     void Start()
     {
         GoldText = gameObject.transform.Find("GoldText").gameObject;
+        WaveText = gameObject.transform.Find("WaveText").gameObject;
     }
 
     public static void AddGold(int amount) 
@@ -52,8 +56,13 @@ public class CanvasController : MonoBehaviour
         // Check which placement spot to use
         var turrentIndexToAdd = Turrets.Count;
         if (turrentIndexToAdd >= 3) return;
-        
+
         var newTurret = Instantiate(TurretPrefab, TurretPlacements[turrentIndexToAdd].transform.position, TurretPrefab.transform.rotation);
         Turrets.Add(newTurret);
+    }
+
+    IEnumerator SpawnWave(int numberOfEnemies)
+    {
+        
     }
 }
