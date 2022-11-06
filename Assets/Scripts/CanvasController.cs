@@ -19,12 +19,13 @@ public class CanvasController : MonoBehaviour
     private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25};
     private static GameObject GoldText;
     private static GameObject WaveText;
-    private int waveNumber = 1;
+    private int waveNumber = 0;
     
     void Start()
     {
         GoldText = gameObject.transform.Find("GoldText").gameObject;
-        // WaveText = gameObject.transform.Find("WaveText").gameObject;
+        WaveText = gameObject.transform.Find("WaveText").gameObject;
+        WaveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
     }
 
     public static void AddGold(int amount) 
@@ -61,8 +62,20 @@ public class CanvasController : MonoBehaviour
         Turrets.Add(newTurret);
     }
 
-    // IEnumerator SpawnWave(int numberOfEnemies)
-    // {
+    public void SpawnWave()
+    {
+        waveNumber++;
+        WaveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
+        StartCoroutine(SpawnWaveInternal(EnemiesPerWave[waveNumber]));
+    }
 
-    // }
+    IEnumerator SpawnWaveInternal(int numberOfEnemies)
+    {
+        for (var i = 0; i < numberOfEnemies; i++)
+        {
+            Instantiate(GreenEnemy, SpawnPoint.transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(3);
+        }
+        yield return null;
+    }
 }
