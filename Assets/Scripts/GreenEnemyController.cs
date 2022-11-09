@@ -9,12 +9,17 @@ public class GreenEnemyController : MonoBehaviour
     public GameObject HealthText;
 
     private GameObject targetPoint;
+    private SpriteRenderer spriteRenderer;
+    private Color32 DimColor = new Color32(255, 255, 255, 225);
+    private Color32 BrightColor = new Color32(255, 255, 255, 255);
     private float health = 100f;
     private int goldWorth = 5;
 
     void Start()
     {
         targetPoint = GameObject.Find("TargetPoint");
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        spriteRenderer.color = DimColor; //Start with dim so that mouse over will "highlight"
     }
 
     void Update()
@@ -25,6 +30,16 @@ public class GreenEnemyController : MonoBehaviour
     void OnMouseDown()
     {
         CanvasController.GlobalTarget = gameObject;
+    }
+
+    void OnMouseOver()
+    {
+        spriteRenderer.color = BrightColor;
+    }
+
+    void OnMouseExit()
+    {
+        spriteRenderer.color = DimColor;
     }
 
     // Hit with Projectile
