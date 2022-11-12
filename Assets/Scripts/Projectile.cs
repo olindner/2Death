@@ -4,8 +4,35 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    enum DamageClass
+    {
+        Green, 
+        Yellow, 
+        Red
+    };
+    [SerializeField] DamageClass damageClass;
+
     public float Speed = 3f;
-    public float Damage = 20f;
+    public float Damage;
+
+    void Start()
+    {
+        switch (damageClass)
+        {
+            case(DamageClass.Green):
+                Damage = 5;
+                break;
+            case(DamageClass.Yellow):
+                Damage = 10;
+                break;
+            case(DamageClass.Red):
+                Damage = 20;
+                break;
+            default:
+                Damage = 1;
+                break;
+        }
+    }
 
     void Update()
     {

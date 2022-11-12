@@ -1115,7 +1115,10 @@ MonoBehaviour:
   - {fileID: 1894913064}
   - {fileID: 1325402299}
   - {fileID: 339032533}
-  TurretPrefab: {fileID: 5696485580059392633, guid: 31c3408b045584928bb0103b9360bc46, type: 3}
+  TurretPrefab:
+  - {fileID: 5696485580059392633, guid: 31c3408b045584928bb0103b9360bc46, type: 3}
+  - {fileID: 5696485580059392633, guid: 7503c4ce8d69c4250a92782d6116fe70, type: 3}
+  - {fileID: 5696485580059392633, guid: 6659de24afee5443a827e6673104d8f3, type: 3}
   SpawnPoint: {fileID: 1704652887}
   GreenEnemy: {fileID: 7538213426995915420, guid: e13f9513bbde6467e9515e56a745162f, type: 3}
   MenuPanel: {fileID: 831136287}

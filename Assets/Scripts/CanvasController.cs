@@ -6,11 +6,13 @@ using System.Linq;
 
 public class CanvasController : MonoBehaviour
 {
+    //Turn these into Serializable Fields
     public static int TotalGold = 0;
     public static GameObject GlobalTarget;
 
+    //Turn these into Observable Lists
     public List<GameObject> TurretPlacements = new List<GameObject>();
-    public GameObject TurretPrefab;
+    [SerializeField] List<GameObject> TurretPrefab;
     public GameObject SpawnPoint;
     public GameObject GreenEnemy;
     public GameObject MenuPanel;
@@ -54,12 +56,16 @@ public class CanvasController : MonoBehaviour
     {
         // Check if enough money
 
-        // Check which placement spot to use
         var turrentIndexToAdd = Turrets.Count;
+
         if (turrentIndexToAdd >= 3) return;
 
-        var newTurret = Instantiate(TurretPrefab, TurretPlacements[turrentIndexToAdd].transform.position, TurretPrefab.transform.rotation);
-        Turrets.Add(newTurret);
+        var turretPrefabToInstantiate = TurretPrefab[turrentIndexToAdd];
+        var positionToAddPrefab = TurretPlacements[turrentIndexToAdd].transform.position;
+
+        var instantiatedTurret = Instantiate(turretPrefabToInstantiate, positionToAddPrefab, turretPrefabToInstantiate.transform.rotation);
+
+        Turrets.Add(instantiatedTurret);
     }
 
     public void SpawnWave()

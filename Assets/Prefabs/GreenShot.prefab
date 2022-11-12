@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2122531498622882046}
   - component: {fileID: -4204736373216440103}
   m_Layer: 0
-  m_Name: YellowShot
+  m_Name: GreenShot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 99af61578a2317c449e29344b2b17479, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.01713243, g: 0.7264151, b: 0.06607886, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -98,7 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd074599f5c74c0f95c23ed3526c733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageClass: 1
   Speed: 3
   Damage: 20
 --- !u!58 &-4204736373216440103
