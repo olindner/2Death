@@ -6,16 +6,15 @@ using System.Linq;
 
 public class CanvasController : MonoBehaviour
 {
-    //Turn these into Serializable Fields
     public static int TotalGold = 0;
     public static GameObject GlobalTarget;
 
     //Turn these into Observable Lists
     public List<GameObject> TurretPlacements = new List<GameObject>();
     [SerializeField] List<GameObject> TurretPrefab;
-    public GameObject SpawnPoint;
-    public GameObject GreenEnemy;
-    public GameObject MenuPanel;
+    [SerializeField] GameObject SpawnPoint;
+    [SerializeField] GameObject GreenEnemy;
+    [SerializeField] GameObject MenuPanel;
 
     private List<GameObject> Turrets = new List<GameObject>();
     private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25};

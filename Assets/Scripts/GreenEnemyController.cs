@@ -5,8 +5,8 @@ using TMPro;
 
 public class GreenEnemyController : MonoBehaviour
 {
-    public float Speed = 0.3f;
-    public GameObject HealthText;
+    private float Speed = 0.3f;
+    [SerializeField] GameObject HealthText;
 
     private GameObject targetPoint;
     private SpriteRenderer spriteRenderer;

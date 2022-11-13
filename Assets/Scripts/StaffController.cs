@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class StaffController : MonoBehaviour
 {
-    public GameObject Projectile;
-
+    [SerializeField] GameObject Projectile;
     private float spawnTimer = 2f;
  
     void Update()

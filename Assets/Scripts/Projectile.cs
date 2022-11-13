@@ -10,10 +10,10 @@ public class Projectile : MonoBehaviour
         Yellow, 
         Red
     };
-    [SerializeField] DamageClass damageClass;
 
-    public float Speed = 3f;
-    public float Damage;
+    [SerializeField] DamageClass damageClass;
+    [HideInInspector] public float Damage;
+    private float Speed = 3f;
 
     void Start()
     {
