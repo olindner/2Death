@@ -30,6 +30,7 @@ public class GreenEnemyController : MonoBehaviour
     void OnMouseDown()
     {
         CanvasController.GlobalTarget = gameObject;
+        Debug.Log($"OMD set Global: {CanvasController.GlobalTarget}");
     }
 
     void OnMouseOver()
@@ -62,6 +63,7 @@ public class GreenEnemyController : MonoBehaviour
 
     void Die()
     {
+        Debug.Log("Died!");
         CanvasController.AddGold(goldWorth);
         CanvasController.ResetTarget();
         Destroy(gameObject);

@@ -20,7 +20,10 @@ public class StaffController : MonoBehaviour
     
     void SpawnProjectile()
     {
-        if (CanvasController.GlobalTarget == null) return;
+        Debug.Log($"StaffCon Global: {CanvasController.GlobalTarget}");
+        if (CanvasController.GlobalTarget == null) {
+            return;
+        }
 
         Instantiate(Projectile, transform.position, Quaternion.identity);
     }

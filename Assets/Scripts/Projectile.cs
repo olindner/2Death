@@ -20,7 +20,7 @@ public class Projectile : MonoBehaviour
         switch (damageClass)
         {
             case(DamageClass.Green):
-                Damage = 5;
+                Damage = 50;
                 break;
             case(DamageClass.Yellow):
                 Damage = 10;
