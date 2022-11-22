@@ -14,13 +14,14 @@ public class Projectile : MonoBehaviour
     [SerializeField] DamageClass damageClass;
     [HideInInspector] public float Damage;
     private float Speed = 3f;
+    private Transform targetTransform = null;
 
     void Start()
     {
         switch (damageClass)
         {
             case(DamageClass.Green):
-                Damage = 50;
+                Damage = 5;
                 break;
             case(DamageClass.Yellow):
                 Damage = 10;
@@ -36,12 +37,17 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
-        if (CanvasController.GlobalTarget == null) 
+        if (targetTransform == null)
         {
             Destroy(gameObject);
             return;
         }
 
-        transform.position = Vector2.MoveTowards(transform.position, CanvasController.GlobalTarget.transform.GetComponent<Renderer>().bounds.center, Speed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, targetTransform.GetComponent<Renderer>().bounds.center, Speed * Time.deltaTime);
+    }
+
+    public void SetTargetTransform(Transform transformToTarget)
+    {
+        targetTransform = transformToTarget;
     }
 }

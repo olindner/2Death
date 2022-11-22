@@ -1,30 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class StaffController : MonoBehaviour
 {
     [SerializeField] GameObject Projectile;
     private float spawnTimer = 2f;
+    private Transform targetTransform = null;
  
-    void Update()
+    private void Update()
     {
         spawnTimer -= Time.deltaTime;
         
         if (spawnTimer <= 0.0f)
         {
+            if (targetTransform == null && GameManager.Instance.AutoAttack && GameManager.Instance.AllEnemies.Count > 0)
+            {
+                FindClosestEnemy();
+            }
+
             SpawnProjectile();
+
             spawnTimer = 2f;
         }
     }
     
-    void SpawnProjectile()
+    private void SpawnProjectile()
     {
-        Debug.Log($"StaffCon Global: {CanvasController.GlobalTarget}");
-        if (CanvasController.GlobalTarget == null) {
+        if (targetTransform == null) {
             return;
         }
 
-        Instantiate(Projectile, transform.position, Quaternion.identity);
+        var projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
+        projectile.GetComponent<Projectile>().SetTargetTransform(targetTransform);
+    }
+
+    // Could eventually optimize to cache, queue, or k-nearest neighbors
+    private void FindClosestEnemy()
+    {
+        targetTransform = GameManager.Instance.AllEnemies.Where(n => n)
+            .OrderBy(n => (n.transform.position - transform.position).sqrMagnitude)
+            .FirstOrDefault().transform;
+    }
+
+    public void SetTargetManually(Transform transformToTarget)
+    {
+        targetTransform = transformToTarget;
     }
 }
