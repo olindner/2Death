@@ -15,9 +15,13 @@ public class CanvasController : MonoBehaviour
 
     private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25};
     
-    private GameObject GoldText;
-    private GameObject WaveText;
+    private GameObject goldText;
+    private GameObject waveText;
     private GameObject autoButton;
+    private GameObject backgroundObject;
+    private Sprite blueBackground;
+    private Sprite greenBackground;
+    private Sprite purpleBackground;
     
     private Color32 EnableColor = new Color32(195, 225, 165, 255);
     private Color32 DisableColor = new Color32(225, 165, 165, 255);
@@ -25,17 +29,28 @@ public class CanvasController : MonoBehaviour
     
     private void Start()
     {
-        GoldText = gameObject.transform.Find("GoldText").gameObject;
-        WaveText = gameObject.transform.Find("WaveText").gameObject;
+        goldText = gameObject.transform.Find("GoldText").gameObject;
+
+        waveText = gameObject.transform.Find("WaveText").gameObject;
+        waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
+
         autoButton = gameObject.transform.Find("AutoButton").gameObject;
         autoButton.GetComponent<Image>().color = DisableColor;
-        WaveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
+
+        backgroundObject = GameObject.Find("Background");
+        blueBackground = Resources.Load<Sprite>("BlueBackground");
+        greenBackground = Resources.Load<Sprite>("GreenBackground");
+        purpleBackground = Resources.Load<Sprite>("PurpleBackground");
+        backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
+        Debug.Log($"Background: {backgroundObject}");
+        Debug.Log($"blueBackground: {blueBackground}");
+        Debug.Log($"greenBackground: {greenBackground}");
     }
 
     public void TotalGoldChanged() 
     {
         var newTotalGold = GameManager.Instance.TotalGold;
-        GoldText.GetComponent<TextMeshProUGUI>().text = $"Gold: {newTotalGold}";
+        goldText.GetComponent<TextMeshProUGUI>().text = $"Gold: {newTotalGold}";
     }
 
     public void SpawnEnemy()
@@ -69,7 +84,17 @@ public class CanvasController : MonoBehaviour
     public void SpawnWave()
     {
         waveNumber++;
-        WaveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
+
+        if (waveNumber == 2)
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = greenBackground;
+        }
+        if (waveNumber == 3)
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
+        }
+
+        waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
         StartCoroutine(SpawnWaveInternal(EnemiesPerWave[waveNumber]));
     }
 
