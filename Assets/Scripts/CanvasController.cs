@@ -42,9 +42,6 @@ public class CanvasController : MonoBehaviour
         greenBackground = Resources.Load<Sprite>("GreenBackground");
         purpleBackground = Resources.Load<Sprite>("PurpleBackground");
         backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
-        Debug.Log($"Background: {backgroundObject}");
-        Debug.Log($"blueBackground: {blueBackground}");
-        Debug.Log($"greenBackground: {greenBackground}");
     }
 
     public void TotalGoldChanged() 

@@ -65,7 +65,6 @@ public class GreenEnemyController : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("Died!");
         GameManager.Instance.TotalGold += goldWorth;
         Destroy(gameObject);
     }
