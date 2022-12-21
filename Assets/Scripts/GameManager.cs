@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,8 +39,8 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] UnityEvent TotalGoldChanged;
-    [SerializeField] UnityEvent AutoAttackChanged;
+    public event Action<int> TotalGoldChanged;
+    public event Action<bool> AutoAttackChanged;
 
     #region GameState
 
@@ -73,9 +74,18 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.Title:
+                var titleClip = Resources.Load("TitleScreen") as AudioClip;
+                AudioSourcer.clip = titleClip;
+                AudioSourcer.Play();
+
                 break;
             case GameState.MainGame:
                 SceneManager.LoadScene("GameScene");
+
+                var gameClip = Resources.Load("NormalGame") as AudioClip;
+                AudioSourcer.clip = gameClip;
+                AudioSourcer.Play();
+
                 break;
             case GameState.SpawnWave:
                 break;
@@ -91,6 +101,21 @@ public class GameManager : MonoBehaviour
     }
     #endregion
     
+    #region Audio
+    private AudioSource audioSourcer;
+    public AudioSource AudioSourcer 
+    {
+        get
+        {
+            return audioSourcer;
+        }
+        set 
+        {
+            audioSourcer = value;
+        }
+    }
+    #endregion 
+    
     #region TotalGold
     private int totalGold = 0;
     public int TotalGold 
@@ -102,7 +127,7 @@ public class GameManager : MonoBehaviour
         set 
         {
             totalGold = value;
-            TotalGoldChanged?.Invoke();
+            TotalGoldChanged?.Invoke(totalGold);
         }
     }
     #endregion
@@ -175,7 +200,7 @@ public class GameManager : MonoBehaviour
         set
         {
             autoAttack = !autoAttack;
-            AutoAttackChanged?.Invoke();
+            AutoAttackChanged?.Invoke(autoAttack);
         }
     }
     #endregion
@@ -184,6 +209,7 @@ public class GameManager : MonoBehaviour
     {
         AllEnemies = new List<GameObject>();
         AllTurrets = new List<GameObject>();
+        AudioSourcer = gameObject.AddComponent<AudioSource>();
 
         UpdateGameState(GameState.Title);
     }

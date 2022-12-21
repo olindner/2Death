@@ -13,14 +13,19 @@ public class StaffController : MonoBehaviour
     {
         spawnTimer -= Time.deltaTime;
         
-        if (spawnTimer <= 0.0f)
+        if (spawnTimer <= 0.0f )
         {
-            if (targetTransform == null && GameManager.Instance.AutoAttack && GameManager.Instance.AllEnemies.Count > 0)
+            if (GameManager.Instance.AllEnemies.Count > 0)
             {
-                FindClosestEnemy();
+                if (targetTransform == null)
+                {
+                    FindClosestEnemy();
+                }
+                if (GameManager.Instance.AutoAttack)
+                {
+                    SpawnProjectile();
+                }
             }
-
-            SpawnProjectile();
 
             spawnTimer = 2f;
         }

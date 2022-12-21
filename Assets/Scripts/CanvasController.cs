@@ -27,6 +27,18 @@ public class CanvasController : MonoBehaviour
     private Color32 DisableColor = new Color32(225, 165, 165, 255);
     private int waveNumber = 0;
     
+    private void Awake()
+    {
+        GameManager.Instance.TotalGoldChanged += TotalGoldChanged;
+        GameManager.Instance.AutoAttackChanged += AutoAttackChanged;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.TotalGoldChanged -= TotalGoldChanged;
+        GameManager.Instance.AutoAttackChanged -= AutoAttackChanged;
+    }
+
     private void Start()
     {
         goldText = gameObject.transform.Find("GoldText").gameObject;
@@ -44,9 +56,8 @@ public class CanvasController : MonoBehaviour
         backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
     }
 
-    public void TotalGoldChanged() 
+    public void TotalGoldChanged(int newTotalGold) 
     {
-        var newTotalGold = GameManager.Instance.TotalGold;
         goldText.GetComponent<TextMeshProUGUI>().text = $"Gold: {newTotalGold}";
     }
 
@@ -106,15 +117,8 @@ public class CanvasController : MonoBehaviour
         yield return null;
     }
 
-    public void AutoAttackChanged()
+    public void AutoAttackChanged(bool autoAttack)
     {
-        if (GameManager.Instance.AutoAttack)
-        {
-            autoButton.GetComponent<Image>().color = EnableColor;
-        }
-        else
-        {
-            autoButton.GetComponent<Image>().color = DisableColor;
-        }
+        autoButton.GetComponent<Image>().color = autoAttack ? EnableColor : DisableColor;
     }
 }
