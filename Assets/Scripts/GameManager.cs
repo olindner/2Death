@@ -100,8 +100,9 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
-    
+
     #region Audio
+    private AudioClip hoverClip;
     private AudioSource audioSourcer;
     public AudioSource AudioSourcer 
     {
@@ -210,6 +211,7 @@ public class GameManager : MonoBehaviour
         AllEnemies = new List<GameObject>();
         AllTurrets = new List<GameObject>();
         AudioSourcer = gameObject.AddComponent<AudioSource>();
+        hoverClip = Resources.Load("Click") as AudioClip;
 
         UpdateGameState(GameState.Title);
     }
@@ -222,5 +224,10 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void HoverMouseNoise()
+    {
+        AudioSourcer.PlayOneShot(hoverClip);
     }
 }
