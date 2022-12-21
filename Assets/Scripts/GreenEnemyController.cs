@@ -10,13 +10,15 @@ public class GreenEnemyController : MonoBehaviour
     private IEnumerator currentCoroutine = null;
     private GameObject targetPoint;
     private SpriteRenderer spriteRenderer;
+    private Color dimmedColor = new Color(1, 1, 1, 0.8f);
+    private Color highlightedColor = new Color(1, 1, 1, 1);
     private Color targetColor;
     private float health = 100f;
     private float damageFadeSpeed = 1f;
     private float speed = 0.3f;
     private int goldWorth = 5;
-    private byte brightAlpha = 255;
-    private byte dimAlpha = 200;
+    private byte highlightedAlpha = 255;
+    private byte dimmedAlpha = 200;
 
     void Start()
     {
@@ -68,8 +70,6 @@ public class GreenEnemyController : MonoBehaviour
             StopCoroutine(currentCoroutine);
         }
 
-        targetColor = spriteRenderer.color;
-
         Redify(spriteRenderer);
         
         currentCoroutine = TargetColorFade(spriteRenderer, damageFadeSpeed);
@@ -93,7 +93,7 @@ public class GreenEnemyController : MonoBehaviour
         float time = 0;
         while (time < duration)
         {
-            sr.color = Color.Lerp(sr.color, targetColor , time / (duration * brightAlpha));
+            sr.color = Color.Lerp(sr.color, targetColor , time / (duration * highlightedAlpha));
             time += Time.deltaTime;
             yield return null;
         }
@@ -104,25 +104,21 @@ public class GreenEnemyController : MonoBehaviour
     void Highlight(SpriteRenderer sr)
     {
         Color32 colorVar = sr.color;
-        colorVar.a = brightAlpha;
+        colorVar.a = highlightedAlpha;
         sr.color = colorVar;
 
-        // When mouse over, adjust target color alpha to bright
-        Color32 temp = targetColor;
-        temp.a = brightAlpha;
-        targetColor = temp;
+        // When mouse over, adjust target color alpha to highlighted
+        targetColor = highlightedColor;
     }
 
     void Dim(SpriteRenderer sr)
     {
         Color32 colorVar = sr.color;
-        colorVar.a = dimAlpha;
+        colorVar.a = dimmedAlpha;
         sr.color = colorVar;
-        
-        // When mouse away, adjust target color alpha to dim
-        Color32 temp = targetColor;
-        temp.a = dimAlpha;
-        targetColor = temp;
+
+        // When mouse away, adjust target color alpha to dimmed
+        targetColor = dimmedColor;
     }
 
     void Redify(SpriteRenderer sr)
