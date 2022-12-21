@@ -5,26 +5,35 @@ using TMPro;
 
 public class GreenEnemyController : MonoBehaviour
 {
-    private float Speed = 0.3f;
     [SerializeField] GameObject HealthText;
 
+    private IEnumerator currentCoroutine = null;
     private GameObject targetPoint;
     private SpriteRenderer spriteRenderer;
-    private Color32 DimColor = new Color32(255, 255, 255, 225);
-    private Color32 BrightColor = new Color32(255, 255, 255, 255);
+    private Color targetColor;
     private float health = 100f;
+    private float damageFadeSpeed = 1f;
+    private float speed = 0.3f;
     private int goldWorth = 5;
+    private byte brightAlpha = 255;
+    private byte dimAlpha = 200;
 
     void Start()
     {
         targetPoint = GameObject.Find("TargetPoint");
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.color = DimColor; //Start with dim so that mouse over will "highlight"
+        targetColor = spriteRenderer.color;
+        Dim(spriteRenderer);
     }
 
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, targetPoint.transform.position, Speed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, targetPoint.transform.position, speed * Time.deltaTime);
+    }
+
+    void OnMouseEnter()
+    {
+        Highlight(spriteRenderer);
     }
 
     void OnMouseDown()
@@ -33,22 +42,39 @@ public class GreenEnemyController : MonoBehaviour
         {
             turret.GetComponent<StaffController>().SetTargetManually(gameObject.transform);
         }
-    }
 
-    void OnMouseOver()
-    {
-        spriteRenderer.color = BrightColor;
+        TakeDamage(GameManager.Instance.ClickDamage);
     }
 
     void OnMouseExit()
     {
-        spriteRenderer.color = DimColor;
+        Dim(spriteRenderer);
     }
 
     // Hit with Projectile
     void OnTriggerEnter2D (Collider2D coll)
     {
         var damage = coll.gameObject.GetComponent<Projectile>().Damage;
+        
+        Destroy(coll.gameObject);
+
+        TakeDamage(damage);
+    }
+
+    void TakeDamage(float damage)
+    {
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+
+        targetColor = spriteRenderer.color;
+
+        Redify(spriteRenderer);
+        
+        currentCoroutine = TargetColorFade(spriteRenderer, damageFadeSpeed);
+        StartCoroutine(currentCoroutine);
+
         health -= damage;
 
         if (health <= 0f)
@@ -59,8 +85,53 @@ public class GreenEnemyController : MonoBehaviour
         {
             HealthText.GetComponent<TextMeshPro>().text = health.ToString();
         }
+    }
 
-        Destroy(coll.gameObject);
+    // Fades to targetColor over time
+    IEnumerator TargetColorFade(SpriteRenderer sr, float duration)
+    {
+        float time = 0;
+        while (time < duration)
+        {
+            sr.color = Color.Lerp(sr.color, targetColor , time / (duration * brightAlpha));
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        sr.color = targetColor;
+    }
+
+    void Highlight(SpriteRenderer sr)
+    {
+        Color32 colorVar = sr.color;
+        colorVar.a = brightAlpha;
+        sr.color = colorVar;
+
+        // When mouse over, adjust target color alpha to bright
+        Color32 temp = targetColor;
+        temp.a = brightAlpha;
+        targetColor = temp;
+    }
+
+    void Dim(SpriteRenderer sr)
+    {
+        Color32 colorVar = sr.color;
+        colorVar.a = dimAlpha;
+        sr.color = colorVar;
+        
+        // When mouse away, adjust target color alpha to dim
+        Color32 temp = targetColor;
+        temp.a = dimAlpha;
+        targetColor = temp;
+    }
+
+    void Redify(SpriteRenderer sr)
+    {
+        Color32 colorVar = sr.color;
+        colorVar.r = 255;
+        colorVar.g = 0;
+        colorVar.b = 0;
+        sr.color = colorVar;
     }
 
     void Die()

@@ -62,6 +62,21 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region ClickDamage
+    private float clickDamage = 10;
+    public float ClickDamage 
+    {
+        get
+        {
+            return clickDamage;
+        }
+        set 
+        {
+            clickDamage = value;
+        }
+    }
+    #endregion
+
     #region AllEnemies
     private List<GameObject> allEnemies;
     public List<GameObject> AllEnemies
