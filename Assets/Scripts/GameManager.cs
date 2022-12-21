@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,17 +36,61 @@ public class GameManager : MonoBehaviour
         
         DontDestroyOnLoad(this);
     }
-
-    private void Start()
-    {
-        AllEnemies = new List<GameObject>();
-        AllTurrets = new List<GameObject>();
-    }
     #endregion
 
     [SerializeField] UnityEvent TotalGoldChanged;
     [SerializeField] UnityEvent AutoAttackChanged;
 
+    #region GameState
+
+    public enum GameState
+    {
+        Title,
+        MainGame,
+        SpawnWave,
+        Gameplay,
+        Win,
+        Lose
+    }
+
+    private GameState state;
+    public GameState State
+    {
+        get
+        {
+            return state;
+        }
+        set
+        {
+            state = value;
+        }
+    }
+
+    public void UpdateGameState(GameState newState)
+    {
+        State = newState;
+
+        switch (newState)
+        {
+            case GameState.Title:
+                break;
+            case GameState.MainGame:
+                SceneManager.LoadScene("GameScene");
+                break;
+            case GameState.SpawnWave:
+                break;
+            case GameState.Gameplay:
+                break;
+            case GameState.Win:
+                break;
+            case GameState.Lose:
+                break;
+            default:
+                break;
+        }
+    }
+    #endregion
+    
     #region TotalGold
     private int totalGold = 0;
     public int TotalGold 
@@ -134,4 +179,22 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
+
+    private void Start()
+    {
+        AllEnemies = new List<GameObject>();
+        AllTurrets = new List<GameObject>();
+
+        UpdateGameState(GameState.Title);
+    }
+
+    public void StartGame()
+    {
+        UpdateGameState(GameState.MainGame);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
