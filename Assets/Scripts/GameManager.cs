@@ -191,7 +191,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region AutoAttack
-    private bool autoAttack;
+    private bool autoAttack = false;
     public bool AutoAttack
     {
         get
@@ -200,9 +200,14 @@ public class GameManager : MonoBehaviour
         }
         set
         {
-            autoAttack = !autoAttack;
+            autoAttack = value;
             AutoAttackChanged?.Invoke(autoAttack);
         }
+    }
+
+    public void ToggleAutoAttack()
+    {
+        AutoAttack = !AutoAttack;
     }
     #endregion
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Diagnostics;
 
 public class CanvasController : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class CanvasController : MonoBehaviour
     
     private GameObject goldText;
     private GameObject waveText;
-    private GameObject autoButton;
+    private Button autoButton;
     private GameObject backgroundObject;
     private Sprite blueBackground;
     private Sprite greenBackground;
@@ -46,8 +47,8 @@ public class CanvasController : MonoBehaviour
         waveText = gameObject.transform.Find("WaveText").gameObject;
         waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
 
-        autoButton = gameObject.transform.Find("AutoButton").gameObject;
-        autoButton.GetComponent<Image>().color = DisableColor;
+        autoButton = gameObject.transform.Find("AutoButton").GetComponent<Button>();
+        autoButton.onClick.AddListener(ButtonClicked);
 
         backgroundObject = GameObject.Find("Background");
         blueBackground = Resources.Load<Sprite>("BlueBackground");
@@ -120,5 +121,10 @@ public class CanvasController : MonoBehaviour
     public void AutoAttackChanged(bool autoAttack)
     {
         autoButton.GetComponent<Image>().color = autoAttack ? EnableColor : DisableColor;
+    }
+
+    private void ButtonClicked()
+    {
+        GameManager.Instance.ToggleAutoAttack();
     }
 }
