@@ -9,13 +9,19 @@ public class GameManager : MonoBehaviour
 {
     #region Singleton
     private static GameManager _instance;
- 
+    private static bool applicationIsQuitting = false;
+
     public static GameManager Instance
     {
         // Could add a lock if needed
         get
         {
-            if(_instance == null)
+            if (applicationIsQuitting)
+            {
+                return null;
+            }
+
+            if (_instance == null)
             {
                 GameObject go = new GameObject("GameManager");
                 go.AddComponent<GameManager>();
@@ -36,6 +42,11 @@ public class GameManager : MonoBehaviour
         }
         
         DontDestroyOnLoad(this);
+    }
+
+    public void OnDestroy()
+    {
+        applicationIsQuitting = true;
     }
     #endregion
 

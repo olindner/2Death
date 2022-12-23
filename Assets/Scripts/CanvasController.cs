@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class CanvasController : MonoBehaviour
 {
@@ -14,11 +15,16 @@ public class CanvasController : MonoBehaviour
     [SerializeField] GameObject MenuPanel;
 
     private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25};
-    
-    private GameObject goldText;
-    private GameObject waveText;
+
+    private AudioClip hoverClip;
+    private AudioSource audioSource;
+
     private GameObject autoButton;
     private GameObject backgroundObject;
+    private GameObject goldText;
+    private GameObject menuButton;
+    private GameObject waveText;
+
     private Sprite blueBackground;
     private Sprite greenBackground;
     private Sprite purpleBackground;
@@ -31,30 +37,54 @@ public class CanvasController : MonoBehaviour
     {
         GameManager.Instance.TotalGoldChanged += TotalGoldChanged;
         GameManager.Instance.AutoAttackChanged += AutoAttackChanged;
+
+        blueBackground = Resources.Load<Sprite>("BlueBackground");
+        greenBackground = Resources.Load<Sprite>("GreenBackground");
+        purpleBackground = Resources.Load<Sprite>("PurpleBackground");
     }
 
     private void OnDestroy()
     {
-        GameManager.Instance.TotalGoldChanged -= TotalGoldChanged;
-        GameManager.Instance.AutoAttackChanged -= AutoAttackChanged;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.TotalGoldChanged -= TotalGoldChanged;
+            GameManager.Instance.AutoAttackChanged -= AutoAttackChanged;
+        }
     }
 
     private void Start()
     {
+        hoverClip = Resources.Load("Click") as AudioClip;
+        audioSource = gameObject.AddComponent<AudioSource>();
+
+        autoButton = gameObject.transform.Find("AutoButton").gameObject;
+        autoButton.GetComponent<Button>().onClick.AddListener(AutoButtonClicked);
+        autoButton.GetComponent<Image>().color = DisableColor;
+        InitButtonHoverEvent(autoButton);
+
+        backgroundObject = GameObject.Find("Background");
+        backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
+
         goldText = gameObject.transform.Find("GoldText").gameObject;
+
+        menuButton = gameObject.transform.Find("MenuButton").gameObject;
+        menuButton.GetComponent<Button>().onClick.AddListener(MenuButtonClicked);
+        InitButtonHoverEvent(menuButton);
 
         waveText = gameObject.transform.Find("WaveText").gameObject;
         waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
+    }
 
-        autoButton = gameObject.transform.Find("AutoButton").gameObject;
-        autoButton.GetComponent<Button>().onClick.AddListener(ButtonClicked);
-        autoButton.GetComponent<Image>().color = DisableColor;
+    private void InitButtonHoverEvent(GameObject button)
+    {
+        EventTrigger trigger = button.GetComponent<EventTrigger>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerEnter;
 
-        backgroundObject = GameObject.Find("Background");
-        blueBackground = Resources.Load<Sprite>("BlueBackground");
-        greenBackground = Resources.Load<Sprite>("GreenBackground");
-        purpleBackground = Resources.Load<Sprite>("PurpleBackground");
-        backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
+        entry.callback = new EventTrigger.TriggerEvent();
+        UnityEngine.Events.UnityAction<BaseEventData> call = new UnityEngine.Events.UnityAction<BaseEventData>(HoverMouseNoise);
+        entry.callback.AddListener(call);
+        trigger.triggers.Add(entry);
     }
 
     public void TotalGoldChanged(int newTotalGold) 
@@ -66,12 +96,6 @@ public class CanvasController : MonoBehaviour
     {
         var enemy = Instantiate(GreenEnemy, SpawnPoint.transform.position, Quaternion.identity);
         GameManager.Instance.AddEnemy(enemy);
-    }
-
-    public void OpenMenu()
-    {
-        if (MenuPanel.activeSelf) MenuPanel.SetActive(false);
-        else MenuPanel.SetActive(true);
     }
 
     public void BuildTurret()
@@ -123,8 +147,19 @@ public class CanvasController : MonoBehaviour
         autoButton.GetComponent<Image>().color = autoAttack ? EnableColor : DisableColor;
     }
 
-    private void ButtonClicked()
+    private void AutoButtonClicked()
     {
         GameManager.Instance.ToggleAutoAttack();
+    }
+
+    private void MenuButtonClicked()
+    {
+        if (MenuPanel.activeSelf) MenuPanel.SetActive(false);
+        else MenuPanel.SetActive(true);
+    }
+
+    public void HoverMouseNoise(UnityEngine.EventSystems.BaseEventData baseEvent)
+    {
+        audioSource.PlayOneShot(hoverClip);
     }
 }
