@@ -113,6 +113,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Audio
+
     private AudioClip hoverClip;
     private AudioSource audioSourcer;
     public AudioSource AudioSourcer 
@@ -126,8 +127,14 @@ public class GameManager : MonoBehaviour
             audioSourcer = value;
         }
     }
-    #endregion 
-    
+
+
+    public void HoverMouseNoise()
+    {
+        AudioSourcer.PlayOneShot(hoverClip);
+    }
+    #endregion
+
     #region TotalGold
     private int totalGold = 0;
     public int TotalGold 
@@ -240,10 +247,5 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    public void HoverMouseNoise()
-    {
-        AudioSourcer.PlayOneShot(hoverClip);
     }
 }

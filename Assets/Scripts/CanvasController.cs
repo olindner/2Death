@@ -23,6 +23,7 @@ public class CanvasController : MonoBehaviour
     private GameObject backgroundObject;
     private GameObject goldText;
     private GameObject menuButton;
+    private GameObject spawnWaveButton;
     private GameObject waveText;
 
     private Sprite blueBackground;
@@ -71,6 +72,10 @@ public class CanvasController : MonoBehaviour
         menuButton.GetComponent<Button>().onClick.AddListener(MenuButtonClicked);
         InitButtonHoverEvent(menuButton);
 
+        spawnWaveButton = gameObject.transform.Find("SpawnWaveButton").gameObject;
+        spawnWaveButton.GetComponent<Button>().onClick.AddListener(SpawnWaveButtonClicked);
+        InitButtonHoverEvent(spawnWaveButton);
+
         waveText = gameObject.transform.Find("WaveText").gameObject;
         waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
     }
@@ -114,23 +119,6 @@ public class CanvasController : MonoBehaviour
         GameManager.Instance.AllTurrets.Add(instantiatedTurret);
     }
 
-    public void SpawnWave()
-    {
-        waveNumber++;
-
-        if (waveNumber == 2)
-        {
-            backgroundObject.GetComponent<SpriteRenderer>().sprite = greenBackground;
-        }
-        if (waveNumber == 3)
-        {
-            backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
-        }
-
-        waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
-        StartCoroutine(SpawnWaveInternal(EnemiesPerWave[waveNumber]));
-    }
-
     IEnumerator SpawnWaveInternal(int numberOfEnemies)
     {
         for (var i = 0; i < numberOfEnemies; i++)
@@ -157,8 +145,26 @@ public class CanvasController : MonoBehaviour
         if (MenuPanel.activeSelf) MenuPanel.SetActive(false);
         else MenuPanel.SetActive(true);
     }
+    
+    private void SpawnWaveButtonClicked()
+    {
+        waveNumber++;
 
-    public void HoverMouseNoise(UnityEngine.EventSystems.BaseEventData baseEvent)
+        if (waveNumber == 2)
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = greenBackground;
+        }
+        if (waveNumber == 3)
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
+        }
+
+        waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
+
+        StartCoroutine(SpawnWaveInternal(EnemiesPerWave[waveNumber]));
+    }
+
+    private void HoverMouseNoise(UnityEngine.EventSystems.BaseEventData baseEvent)
     {
         audioSource.PlayOneShot(hoverClip);
     }
