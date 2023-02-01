@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        else {
+        else 
+        {
             _instance = this;
         }
         
