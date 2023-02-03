@@ -24,7 +24,7 @@ public class CanvasController : MonoBehaviour
     private GameObject goldText;
     private GameObject menuButton;
     private GameObject spawnWaveButton;
-    private GameObject waveText;
+    private GameObject waveNumberText;
 
     private Sprite blueBackground;
     private Sprite greenBackground;
@@ -76,8 +76,7 @@ public class CanvasController : MonoBehaviour
         spawnWaveButton.GetComponent<Button>().onClick.AddListener(SpawnWaveButtonClicked);
         InitButtonHoverEvent(spawnWaveButton);
 
-        waveText = gameObject.transform.Find("WaveText").gameObject;
-        waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
+        waveNumberText = gameObject.transform.Find("WaveNumberText").gameObject;
     }
 
     private void InitButtonHoverEvent(GameObject button)
@@ -95,6 +94,11 @@ public class CanvasController : MonoBehaviour
     public void TotalGoldChanged(int newTotalGold) 
     {
         goldText.GetComponent<TextMeshProUGUI>().text = $"Gold: {newTotalGold}";
+    }
+
+    public void WaveNumberChanged(int newWaveNumber) 
+    {
+        waveNumberText.GetComponent<TextMeshProUGUI>().text = $"Wave {newWaveNumber}";
     }
 
     public void SpawnEnemy()
@@ -159,7 +163,6 @@ public class CanvasController : MonoBehaviour
             backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
         }
 
-        waveText.GetComponent<TextMeshProUGUI>().text = $"Wave: {waveNumber.ToString()}";
 
         StartCoroutine(SpawnWaveInternal(EnemiesPerWave[waveNumber]));
     }

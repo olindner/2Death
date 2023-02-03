@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public event Action<int> TotalGoldChanged;
+    public event Action<int> WaveNumberChanged;
     public event Action<bool> AutoAttackChanged;
 
     #region GameState
@@ -98,6 +99,8 @@ public class GameManager : MonoBehaviour
                 AudioSourcer.clip = gameClip;
                 AudioSourcer.Play();
 
+                //Start spawning coroutine, then in coroutine will eventually trigger new state
+
                 break;
             case GameState.SpawnWave:
                 break;
@@ -136,8 +139,45 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region Wave
+    private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25};
+    private int waveNumber;
+    public int WaveNumber 
+    {
+        get
+        {
+            return waveNumber;
+        }
+        set 
+        {
+            waveNumber = value;
+            WaveNumberChanged?.Invoke(waveNumber);
+        }
+    }
+
+    private IEnumerator SpawnWaveDriver()
+    {
+        int numberOfEnemiesToSpawn = EnemiesPerWave[WaveNumber];
+
+        for (var i = 0; i < numberOfEnemiesToSpawn; i++)
+        {
+            SpawnEnemy();
+
+            yield return new WaitForSeconds(5);
+        }
+
+        yield return null;
+    }
+
+    private void SpawnEnemy()
+    {
+        var enemy = Instantiate(GreenEnemy, SpawnPoint.transform.position, Quaternion.identity);
+        GameManager.Instance.AddEnemy(enemy);
+    }
+    #endregion
+
     #region TotalGold
-    private int totalGold = 0;
+    private int totalGold;
     public int TotalGold 
     {
         get
@@ -240,6 +280,7 @@ public class GameManager : MonoBehaviour
         UpdateGameState(GameState.Title);
     }
 
+    // This is binded to the "Start Game" button in the Menu scene
     public void StartGame()
     {
         UpdateGameState(GameState.MainGame);
