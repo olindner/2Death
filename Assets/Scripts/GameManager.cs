@@ -99,16 +99,21 @@ public class GameManager : MonoBehaviour
                 AudioSourcer.clip = gameClip;
                 AudioSourcer.Play();
 
-                //Start spawning coroutine, then in coroutine will eventually trigger new state
-
+                UpdateGameState(GameState.SpawnWave);
                 break;
             case GameState.SpawnWave:
+                //Start spawning coroutine, then in coroutine will eventually trigger new state
+                StartCoroutine(SpawnWaveDriver());
                 break;
             case GameState.Gameplay:
+                // Not sure if any logic needed here
                 break;
             case GameState.Win:
+                SceneManager.LoadScene("WinScene");
+                // Play win music
                 break;
             case GameState.Lose:
+                SceneManager.LoadScene("LoseScene");
                 break;
             default:
                 break;
@@ -154,10 +159,24 @@ public class GameManager : MonoBehaviour
             WaveNumberChanged?.Invoke(waveNumber);
         }
     }
+    private GameObject GreenEnemy;
 
     private IEnumerator SpawnWaveDriver()
     {
+        WaveNumber++;
+        Debug.Log($"Spawning wave {WaveNumber}");
+
+        if (WaveNumber >= EnemiesPerWave.Count - 1)
+        {
+            UpdateGameState(GameState.Win);
+            yield return null;
+        }
+
+        // This short delay is for displaying title
+        yield return new WaitForSeconds(1);
+
         int numberOfEnemiesToSpawn = EnemiesPerWave[WaveNumber];
+        Debug.Log($"Spawning numberOfEnemiesToSpawn {numberOfEnemiesToSpawn}");
 
         for (var i = 0; i < numberOfEnemiesToSpawn; i++)
         {
@@ -166,13 +185,15 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(5);
         }
 
+        Debug.Log("End of Driver, updating state to gameplay");
+        UpdateGameState(GameState.Gameplay);
         yield return null;
     }
 
     private void SpawnEnemy()
     {
-        var enemy = Instantiate(GreenEnemy, SpawnPoint.transform.position, Quaternion.identity);
-        GameManager.Instance.AddEnemy(enemy);
+        var enemy = Instantiate(GreenEnemy, new Vector2(-11, -2), Quaternion.identity);
+        AddEnemy(enemy);
     }
     #endregion
 
@@ -213,20 +234,31 @@ public class GameManager : MonoBehaviour
     {
         get
         {
+            // Might be able to remove this line - need to test
             allEnemies.RemoveAll(enemy => enemy == null);
             return allEnemies; // Could return AsReadOnly()
         }
         set
         {
+            Debug.Log("AllEnemies set called");
             allEnemies = value;
+            allEnemies.RemoveAll(enemy => enemy == null);
+            // If empty trigger new spawn or victory
+            if (allEnemies.Count == 0)
+            {
+                Debug.Log("No enemies left");
+                if (State == GameState.Gameplay)
+                {
+                    UpdateGameState(GameState.SpawnWave);
+                }
+            }
         }
     }
 
-    public void AddEnemy(GameObject newEnemy)
+    private void AddEnemy(GameObject newEnemy)
     {
         AllEnemies.Add(newEnemy);
     }
-
     #endregion
 
     #region AllTurrets
@@ -276,6 +308,7 @@ public class GameManager : MonoBehaviour
         AllTurrets = new List<GameObject>();
         AudioSourcer = gameObject.AddComponent<AudioSource>();
         hoverClip = Resources.Load("Click") as AudioClip;
+        GreenEnemy = Resources.Load("GreenEnemy") as GameObject;
 
         UpdateGameState(GameState.Title);
     }

@@ -10,11 +10,7 @@ public class CanvasController : MonoBehaviour
     //Turn these into Observable Lists
     public List<GameObject> TurretPlacements = new List<GameObject>();
     [SerializeField] List<GameObject> TurretPrefab;
-    [SerializeField] GameObject SpawnPoint;
-    [SerializeField] GameObject GreenEnemy;
     [SerializeField] GameObject MenuPanel;
-
-    private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25};
 
     private AudioClip hoverClip;
     private AudioSource audioSource;
@@ -23,7 +19,6 @@ public class CanvasController : MonoBehaviour
     private GameObject backgroundObject;
     private GameObject goldText;
     private GameObject menuButton;
-    private GameObject spawnWaveButton;
     private GameObject waveNumberText;
 
     private Sprite blueBackground;
@@ -32,12 +27,12 @@ public class CanvasController : MonoBehaviour
     
     private Color32 EnableColor = new Color32(195, 225, 165, 255);
     private Color32 DisableColor = new Color32(225, 165, 165, 255);
-    private int waveNumber = 0;
     
     private void Awake()
     {
         GameManager.Instance.TotalGoldChanged += TotalGoldChanged;
         GameManager.Instance.AutoAttackChanged += AutoAttackChanged;
+        GameManager.Instance.WaveNumberChanged += WaveNumberChanged;
 
         blueBackground = Resources.Load<Sprite>("BlueBackground");
         greenBackground = Resources.Load<Sprite>("GreenBackground");
@@ -72,10 +67,6 @@ public class CanvasController : MonoBehaviour
         menuButton.GetComponent<Button>().onClick.AddListener(MenuButtonClicked);
         InitButtonHoverEvent(menuButton);
 
-        spawnWaveButton = gameObject.transform.Find("SpawnWaveButton").gameObject;
-        spawnWaveButton.GetComponent<Button>().onClick.AddListener(SpawnWaveButtonClicked);
-        InitButtonHoverEvent(spawnWaveButton);
-
         waveNumberText = gameObject.transform.Find("WaveNumberText").gameObject;
     }
 
@@ -99,12 +90,15 @@ public class CanvasController : MonoBehaviour
     public void WaveNumberChanged(int newWaveNumber) 
     {
         waveNumberText.GetComponent<TextMeshProUGUI>().text = $"Wave {newWaveNumber}";
-    }
 
-    public void SpawnEnemy()
-    {
-        var enemy = Instantiate(GreenEnemy, SpawnPoint.transform.position, Quaternion.identity);
-        GameManager.Instance.AddEnemy(enemy);
+        if (newWaveNumber == 3)
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = greenBackground;
+        }
+        if (newWaveNumber == 5)
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
+        }
     }
 
     public void BuildTurret()
@@ -123,17 +117,6 @@ public class CanvasController : MonoBehaviour
         GameManager.Instance.AllTurrets.Add(instantiatedTurret);
     }
 
-    IEnumerator SpawnWaveInternal(int numberOfEnemies)
-    {
-        for (var i = 0; i < numberOfEnemies; i++)
-        {
-            SpawnEnemy();
-
-            yield return new WaitForSeconds(5);
-        }
-        yield return null;
-    }
-
     public void AutoAttackChanged(bool autoAttack)
     {
         autoButton.GetComponent<Image>().color = autoAttack ? EnableColor : DisableColor;
@@ -148,23 +131,6 @@ public class CanvasController : MonoBehaviour
     {
         if (MenuPanel.activeSelf) MenuPanel.SetActive(false);
         else MenuPanel.SetActive(true);
-    }
-    
-    private void SpawnWaveButtonClicked()
-    {
-        waveNumber++;
-
-        if (waveNumber == 2)
-        {
-            backgroundObject.GetComponent<SpriteRenderer>().sprite = greenBackground;
-        }
-        if (waveNumber == 3)
-        {
-            backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
-        }
-
-
-        StartCoroutine(SpawnWaveInternal(EnemiesPerWave[waveNumber]));
     }
 
     private void HoverMouseNoise(UnityEngine.EventSystems.BaseEventData baseEvent)
