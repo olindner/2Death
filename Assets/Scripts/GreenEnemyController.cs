@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using GameState = GameManager.GameState;
 
 public class GreenEnemyController : MonoBehaviour
 {
@@ -133,6 +134,13 @@ public class GreenEnemyController : MonoBehaviour
     void Die()
     {
         GameManager.Instance.TotalGold += goldWorth;
+
+        if (GameManager.Instance.AllEnemies.Count <= 1)
+        {
+            // Could trigger a wait screen to prepare for next wave
+            GameManager.Instance.UpdateGameState(GameState.SpawnWave);
+        }
+
         Destroy(gameObject);
     }
 }

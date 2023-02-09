@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using GameState = GameManager.GameState;
 
 public class CanvasController : MonoBehaviour
 {
@@ -68,6 +69,9 @@ public class CanvasController : MonoBehaviour
         InitButtonHoverEvent(menuButton);
 
         waveNumberText = gameObject.transform.Find("WaveNumberText").gameObject;
+
+        // Only after Canvas has initialized successfully allow the first wave to spawn
+        GameManager.Instance.UpdateGameState(GameState.SpawnWave);
     }
 
     private void InitButtonHoverEvent(GameObject button)

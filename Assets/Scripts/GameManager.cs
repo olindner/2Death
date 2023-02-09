@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         Title,
         MainGame,
         SpawnWave,
-        Gameplay,
+        GamePlay,
         Win,
         Lose
     }
@@ -99,13 +99,12 @@ public class GameManager : MonoBehaviour
                 AudioSourcer.clip = gameClip;
                 AudioSourcer.Play();
 
-                UpdateGameState(GameState.SpawnWave);
                 break;
             case GameState.SpawnWave:
                 //Start spawning coroutine, then in coroutine will eventually trigger new state
                 StartCoroutine(SpawnWaveDriver());
                 break;
-            case GameState.Gameplay:
+            case GameState.GamePlay:
                 // Not sure if any logic needed here
                 break;
             case GameState.Win:
@@ -164,29 +163,33 @@ public class GameManager : MonoBehaviour
     private IEnumerator SpawnWaveDriver()
     {
         WaveNumber++;
-        Debug.Log($"Spawning wave {WaveNumber}");
 
         if (WaveNumber >= EnemiesPerWave.Count - 1)
         {
             UpdateGameState(GameState.Win);
             yield return null;
         }
+        else
+        {
+            UpdateGameState(GameState.GamePlay);
+        }
 
         // This short delay is for displaying title
         yield return new WaitForSeconds(1);
 
         int numberOfEnemiesToSpawn = EnemiesPerWave[WaveNumber];
-        Debug.Log($"Spawning numberOfEnemiesToSpawn {numberOfEnemiesToSpawn}");
 
         for (var i = 0; i < numberOfEnemiesToSpawn; i++)
         {
             SpawnEnemy();
 
-            yield return new WaitForSeconds(5);
+            // Final enemy spawn should not delay game logic
+            if (i != numberOfEnemiesToSpawn)
+            {
+                yield return new WaitForSeconds(5);
+            }
         }
 
-        Debug.Log("End of Driver, updating state to gameplay");
-        UpdateGameState(GameState.Gameplay);
         yield return null;
     }
 
@@ -240,14 +243,12 @@ public class GameManager : MonoBehaviour
         }
         set
         {
-            Debug.Log("AllEnemies set called");
             allEnemies = value;
             allEnemies.RemoveAll(enemy => enemy == null);
             // If empty trigger new spawn or victory
             if (allEnemies.Count == 0)
             {
-                Debug.Log("No enemies left");
-                if (State == GameState.Gameplay)
+                if (State == GameState.GamePlay)
                 {
                     UpdateGameState(GameState.SpawnWave);
                 }
