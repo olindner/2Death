@@ -18,6 +18,7 @@ public class CanvasController : MonoBehaviour
 
     private GameObject autoButton;
     private GameObject backgroundObject;
+    private GameObject enemiesRemainingText;
     private GameObject goldText;
     private GameObject menuButton;
     private GameObject waveNumberText;
@@ -31,8 +32,9 @@ public class CanvasController : MonoBehaviour
     
     private void Awake()
     {
-        GameManager.Instance.TotalGoldChanged += TotalGoldChanged;
         GameManager.Instance.AutoAttackChanged += AutoAttackChanged;
+        GameManager.Instance.EnemyCountChanged += EnemyCountChanged;
+        GameManager.Instance.TotalGoldChanged += TotalGoldChanged;
         GameManager.Instance.WaveNumberChanged += WaveNumberChanged;
 
         blueBackground = Resources.Load<Sprite>("BlueBackground");
@@ -62,6 +64,7 @@ public class CanvasController : MonoBehaviour
         backgroundObject = GameObject.Find("Background");
         backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
 
+        enemiesRemainingText = gameObject.transform.Find("EnemiesRemainingText").gameObject;
         goldText = gameObject.transform.Find("GoldText").gameObject;
 
         menuButton = gameObject.transform.Find("MenuButton").gameObject;
@@ -84,6 +87,11 @@ public class CanvasController : MonoBehaviour
         UnityEngine.Events.UnityAction<BaseEventData> call = new UnityEngine.Events.UnityAction<BaseEventData>(HoverMouseNoise);
         entry.callback.AddListener(call);
         trigger.triggers.Add(entry);
+    }
+
+    public void EnemyCountChanged(int newCount) 
+    {
+        enemiesRemainingText.GetComponent<TextMeshProUGUI>().text = $"Enemies Remaining {newCount}";
     }
 
     public void TotalGoldChanged(int newTotalGold) 

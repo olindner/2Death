@@ -135,11 +135,7 @@ public class GreenEnemyController : MonoBehaviour
     {
         GameManager.Instance.TotalGold += goldWorth;
 
-        if (GameManager.Instance.AllEnemies.Count <= 1)
-        {
-            // Could trigger a wait screen to prepare for next wave
-            GameManager.Instance.UpdateGameState(GameState.SpawnWave);
-        }
+        GameManager.Instance.EnemyDied();
 
         Destroy(gameObject);
     }

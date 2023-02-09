@@ -51,9 +51,10 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public event Action<bool> AutoAttackChanged;
+    public event Action<int> EnemyCountChanged;
     public event Action<int> TotalGoldChanged;
     public event Action<int> WaveNumberChanged;
-    public event Action<bool> AutoAttackChanged;
 
     #region GameState
 
@@ -237,28 +238,41 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            // Might be able to remove this line - need to test
             allEnemies.RemoveAll(enemy => enemy == null);
+            StartCoroutine(UpdateEnemyCount());
             return allEnemies; // Could return AsReadOnly()
         }
         set
         {
             allEnemies = value;
-            allEnemies.RemoveAll(enemy => enemy == null);
-            // If empty trigger new spawn or victory
-            if (allEnemies.Count == 0)
-            {
-                if (State == GameState.GamePlay)
-                {
-                    UpdateGameState(GameState.SpawnWave);
-                }
-            }
         }
     }
 
     private void AddEnemy(GameObject newEnemy)
     {
         AllEnemies.Add(newEnemy);
+    }
+
+    public void EnemyDied()
+    {
+        StartCoroutine(UpdateEnemyCount());
+
+        if (AllEnemies.Count <= 1)
+        {
+            //TODO: Check for win condition
+
+            // Could trigger a wait screen to prepare for next wave
+            UpdateGameState(GameState.SpawnWave);
+        }
+    }
+
+    private IEnumerator UpdateEnemyCount()
+    {
+        // Hack for allowing enemy to die before updating count
+        yield return new WaitForSeconds(0.1f);
+
+        allEnemies.RemoveAll(enemy => enemy == null);
+        EnemyCountChanged?.Invoke(allEnemies.Count);
     }
     #endregion
 
