@@ -137,7 +137,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     public void HoverMouseNoise()
     {
         AudioSourcer.PlayOneShot(hoverClip);
@@ -145,7 +144,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Wave
-    private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25};
+    private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25 };
     private int waveNumber;
     public int WaveNumber 
     {
@@ -212,8 +211,13 @@ public class GameManager : MonoBehaviour
         set 
         {
             totalGold = value;
-            TotalGoldChanged?.Invoke(totalGold);
         }
+    }
+
+    public void ChangeTotalGoldBy(int goldDelta)
+    {
+        TotalGold += goldDelta;
+        TotalGoldChanged?.Invoke(TotalGold);
     }
     #endregion
 
@@ -289,6 +293,8 @@ public class GameManager : MonoBehaviour
             allTurrets = value;
         }
     }
+
+    public List<int> TurretCosts = new List<int>{ 10, 50, 100 };
 
     public void AddTurret(GameObject newTurret)
     {

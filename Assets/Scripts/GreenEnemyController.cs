@@ -133,7 +133,7 @@ public class GreenEnemyController : MonoBehaviour
 
     void Die()
     {
-        GameManager.Instance.TotalGold += goldWorth;
+        GameManager.Instance.ChangeTotalGoldBy(goldWorth);
 
         GameManager.Instance.EnemyDied();
 

@@ -48,8 +48,10 @@ public class CanvasController : MonoBehaviour
     {
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.TotalGoldChanged -= TotalGoldChanged;
             GameManager.Instance.AutoAttackChanged -= AutoAttackChanged;
+            GameManager.Instance.EnemyCountChanged -= EnemyCountChanged;
+            GameManager.Instance.TotalGoldChanged -= TotalGoldChanged;
+            GameManager.Instance.WaveNumberChanged -= WaveNumberChanged;
         }
     }
 
@@ -114,6 +116,7 @@ public class CanvasController : MonoBehaviour
     }
     #endregion
 
+    #region Buttons
     private void InitButtonHoverEvent(GameObject button)
     {
         EventTrigger trigger = button.GetComponent<EventTrigger>();
@@ -124,22 +127,6 @@ public class CanvasController : MonoBehaviour
         UnityEngine.Events.UnityAction<BaseEventData> call = new UnityEngine.Events.UnityAction<BaseEventData>(HoverMouseNoise);
         entry.callback.AddListener(call);
         trigger.triggers.Add(entry);
-    }
-
-    public void BuildTurret()
-    {
-        // Check if enough money
-
-        var turrentIndexToAdd = GameManager.Instance.AllTurrets.Count;
-
-        if (turrentIndexToAdd >= 3) return;
-
-        var turretPrefabToInstantiate = TurretPrefab[turrentIndexToAdd];
-        var positionToAddPrefab = TurretPlacements[turrentIndexToAdd].transform.position;
-
-        var instantiatedTurret = Instantiate(turretPrefabToInstantiate, positionToAddPrefab, turretPrefabToInstantiate.transform.rotation);
-
-        GameManager.Instance.AllTurrets.Add(instantiatedTurret);
     }
 
     private void AutoButtonClicked()
@@ -157,6 +144,33 @@ public class CanvasController : MonoBehaviour
     {
         audioSource.PlayOneShot(hoverClip);
     }
+    #endregion
+
+    #region Turrets
+    public void BuildTurret()
+    {
+        var numberOfUnlockedTurrets = GameManager.Instance.AllTurrets.Count;
+        if (numberOfUnlockedTurrets >= 3) return;
+
+        if (!SuccessfullyPaidForTurret(numberOfUnlockedTurrets)) return;
+
+        var turretPrefabToInstantiate = TurretPrefab[numberOfUnlockedTurrets];
+        var positionToAddPrefab = TurretPlacements[numberOfUnlockedTurrets].transform.position;
+
+        var instantiatedTurret = Instantiate(turretPrefabToInstantiate, positionToAddPrefab, turretPrefabToInstantiate.transform.rotation);
+
+        GameManager.Instance.AllTurrets.Add(instantiatedTurret);
+    }
+
+    private bool SuccessfullyPaidForTurret(int numberOfUnlockedTurrets)
+    {
+        var costOfNextTurret = GameManager.Instance.TurretCosts[numberOfUnlockedTurrets];
+        if (GameManager.Instance.TotalGold < costOfNextTurret) return false;
+
+        GameManager.Instance.ChangeTotalGoldBy(-costOfNextTurret);
+        return true;
+    }
+    #endregion
 
     #region Helpers
     private IEnumerator GrowTextAndFadeBack(TextMeshProUGUI mesh)
