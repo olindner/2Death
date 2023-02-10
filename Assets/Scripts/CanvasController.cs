@@ -18,18 +18,20 @@ public class CanvasController : MonoBehaviour
 
     private GameObject autoButton;
     private GameObject backgroundObject;
-    private GameObject enemiesRemainingText;
-    private GameObject goldText;
     private GameObject menuButton;
-    private GameObject waveNumberText;
 
     private Sprite blueBackground;
     private Sprite greenBackground;
     private Sprite purpleBackground;
     
+    private TextMeshProUGUI enemiesRemainingTextMesh;
+    private TextMeshProUGUI goldTextMesh;
+    private TextMeshProUGUI waveNumberTextMesh;
+
     private Color32 EnableColor = new Color32(195, 225, 165, 255);
     private Color32 DisableColor = new Color32(225, 165, 165, 255);
     
+    #region Built In Functions
     private void Awake()
     {
         GameManager.Instance.AutoAttackChanged += AutoAttackChanged;
@@ -64,18 +66,53 @@ public class CanvasController : MonoBehaviour
         backgroundObject = GameObject.Find("Background");
         backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
 
-        enemiesRemainingText = gameObject.transform.Find("EnemiesRemainingText").gameObject;
-        goldText = gameObject.transform.Find("GoldText").gameObject;
+        enemiesRemainingTextMesh = gameObject.transform.Find("EnemiesRemainingText").gameObject.GetComponent<TextMeshProUGUI>();
+        goldTextMesh = gameObject.transform.Find("GoldText").gameObject.gameObject.GetComponent<TextMeshProUGUI>();
 
         menuButton = gameObject.transform.Find("MenuButton").gameObject;
         menuButton.GetComponent<Button>().onClick.AddListener(MenuButtonClicked);
         InitButtonHoverEvent(menuButton);
 
-        waveNumberText = gameObject.transform.Find("WaveNumberText").gameObject;
+        waveNumberTextMesh = gameObject.transform.Find("WaveNumberText").gameObject.GetComponent<TextMeshProUGUI>();
 
         // Only after Canvas has initialized successfully allow the first wave to spawn
         GameManager.Instance.UpdateGameState(GameState.SpawnWave);
     }
+    #endregion
+
+    #region Observables
+    public void AutoAttackChanged(bool autoAttack)
+    {
+        autoButton.GetComponent<Image>().color = autoAttack ? EnableColor : DisableColor;
+    }
+    
+    public void EnemyCountChanged(int newCount) 
+    {
+        enemiesRemainingTextMesh.text = $"Enemies Remaining {newCount}";
+        // StartCoroutine(GrowTextAndFadeBack(enemiesRemainingTextMesh));
+    }
+
+    public void TotalGoldChanged(int newTotalGold) 
+    {
+        goldTextMesh.text = $"Gold {newTotalGold}";
+        StartCoroutine(GrowTextAndFadeBack(goldTextMesh));
+    }
+
+    public void WaveNumberChanged(int newWaveNumber) 
+    {
+        waveNumberTextMesh.text = $"Wave {newWaveNumber}";
+        StartCoroutine(GrowTextAndFadeBack(waveNumberTextMesh));
+
+        if (newWaveNumber == 3)
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = greenBackground;
+        }
+        if (newWaveNumber == 5)
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
+        }
+    }
+    #endregion
 
     private void InitButtonHoverEvent(GameObject button)
     {
@@ -87,30 +124,6 @@ public class CanvasController : MonoBehaviour
         UnityEngine.Events.UnityAction<BaseEventData> call = new UnityEngine.Events.UnityAction<BaseEventData>(HoverMouseNoise);
         entry.callback.AddListener(call);
         trigger.triggers.Add(entry);
-    }
-
-    public void EnemyCountChanged(int newCount) 
-    {
-        enemiesRemainingText.GetComponent<TextMeshProUGUI>().text = $"Enemies Remaining {newCount}";
-    }
-
-    public void TotalGoldChanged(int newTotalGold) 
-    {
-        goldText.GetComponent<TextMeshProUGUI>().text = $"Gold: {newTotalGold}";
-    }
-
-    public void WaveNumberChanged(int newWaveNumber) 
-    {
-        waveNumberText.GetComponent<TextMeshProUGUI>().text = $"Wave {newWaveNumber}";
-
-        if (newWaveNumber == 3)
-        {
-            backgroundObject.GetComponent<SpriteRenderer>().sprite = greenBackground;
-        }
-        if (newWaveNumber == 5)
-        {
-            backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
-        }
     }
 
     public void BuildTurret()
@@ -129,11 +142,6 @@ public class CanvasController : MonoBehaviour
         GameManager.Instance.AllTurrets.Add(instantiatedTurret);
     }
 
-    public void AutoAttackChanged(bool autoAttack)
-    {
-        autoButton.GetComponent<Image>().color = autoAttack ? EnableColor : DisableColor;
-    }
-
     private void AutoButtonClicked()
     {
         GameManager.Instance.ToggleAutoAttack();
@@ -149,4 +157,19 @@ public class CanvasController : MonoBehaviour
     {
         audioSource.PlayOneShot(hoverClip);
     }
+
+    #region Helpers
+    private IEnumerator GrowTextAndFadeBack(TextMeshProUGUI mesh)
+    {
+        float sizeStart = 40f;
+        float sizeEnd = 36f;
+        float t = 0f;
+        while(t < 1f)
+        {            
+            t += Time.deltaTime;
+            mesh.fontSize = (int)Mathf.Lerp (sizeStart, sizeEnd, Mathf.SmoothStep(0f, 1f, t));
+            yield return null;
+        }        
+    }
+    #endregion
 }
