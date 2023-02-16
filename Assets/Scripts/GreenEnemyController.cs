@@ -43,7 +43,10 @@ public class GreenEnemyController : MonoBehaviour
     {
         foreach (var turret in GameManager.Instance.AllTurrets)
         {
-            turret.GetComponent<StaffController>().SetTargetManually(gameObject.transform);
+            if (turret.activeSelf)
+            {
+                turret.GetComponent<StaffController>().SetTargetManually(gameObject.transform);
+            }
         }
 
         TakeDamage(GameManager.Instance.ClickDamage);

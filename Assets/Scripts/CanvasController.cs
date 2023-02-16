@@ -2,40 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using GameState = GameManager.GameState;
 
 public class CanvasController : MonoBehaviour
 {
-    //Turn these into Observable Lists
-    public List<GameObject> TurretPlacements = new List<GameObject>();
-    [SerializeField] List<GameObject> TurretPrefab;
-    [SerializeField] GameObject MenuPanel;
-
+    #region Variable References
     private AudioClip hoverClip;
     private AudioSource audioSource;
+
+    private Color32 EnableColor = new Color32(195, 225, 165, 255);
+    private Color32 DisableColor = new Color32(225, 165, 165, 255);
 
     private GameObject autoButton;
     private GameObject backgroundObject;
     private GameObject menuButton;
+    private GameObject menuPanel;
+    private GameObject turretTextParent;
+
+    private List<GameObject> turretTextList;
 
     private Sprite blueBackground;
     private Sprite greenBackground;
     private Sprite purpleBackground;
     
+    private TextMeshProUGUI advancedTurretTextMesh;
+    private TextMeshProUGUI basicTurretTextMesh;
+    private TextMeshProUGUI buildTurretCostTextMesh;
     private TextMeshProUGUI enemiesRemainingTextMesh;
     private TextMeshProUGUI goldTextMesh;
+    private TextMeshProUGUI regularTurretTextMesh;
     private TextMeshProUGUI waveNumberTextMesh;
-
-    private Color32 EnableColor = new Color32(195, 225, 165, 255);
-    private Color32 DisableColor = new Color32(225, 165, 165, 255);
+    #endregion
     
     #region Built In Functions
     private void Awake()
     {
         GameManager.Instance.AutoAttackChanged += AutoAttackChanged;
         GameManager.Instance.EnemyCountChanged += EnemyCountChanged;
+        GameManager.Instance.NewTurretBuilt += NewTurretBuilt;
         GameManager.Instance.TotalGoldChanged += TotalGoldChanged;
         GameManager.Instance.WaveNumberChanged += WaveNumberChanged;
 
@@ -50,6 +57,7 @@ public class CanvasController : MonoBehaviour
         {
             GameManager.Instance.AutoAttackChanged -= AutoAttackChanged;
             GameManager.Instance.EnemyCountChanged -= EnemyCountChanged;
+            GameManager.Instance.NewTurretBuilt -= NewTurretBuilt;
             GameManager.Instance.TotalGoldChanged -= TotalGoldChanged;
             GameManager.Instance.WaveNumberChanged -= WaveNumberChanged;
         }
@@ -57,7 +65,8 @@ public class CanvasController : MonoBehaviour
 
     private void Start()
     {
-        hoverClip = Resources.Load("Click") as AudioClip;
+        advancedTurretTextMesh = GameObject.Find("AdvancedTurretText").gameObject.GetComponent<TextMeshProUGUI>();
+
         audioSource = gameObject.AddComponent<AudioSource>();
 
         autoButton = gameObject.transform.Find("AutoButton").gameObject;
@@ -68,17 +77,42 @@ public class CanvasController : MonoBehaviour
         backgroundObject = GameObject.Find("Background");
         backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
 
-        enemiesRemainingTextMesh = gameObject.transform.Find("EnemiesRemainingText").gameObject.GetComponent<TextMeshProUGUI>();
-        goldTextMesh = gameObject.transform.Find("GoldText").gameObject.gameObject.GetComponent<TextMeshProUGUI>();
+        basicTurretTextMesh = GameObject.Find("BasicTurretText").gameObject.GetComponent<TextMeshProUGUI>();
 
-        menuButton = gameObject.transform.Find("MenuButton").gameObject;
+        buildTurretCostTextMesh = GameObject.Find("BuildTurretCostText").gameObject.GetComponent<TextMeshProUGUI>();
+        buildTurretCostTextMesh.text = $"Cost ${GameManager.Instance.TurretCosts[0]}";
+
+        enemiesRemainingTextMesh = GameObject.Find("EnemiesRemainingText").gameObject.GetComponent<TextMeshProUGUI>();
+        goldTextMesh = GameObject.Find("GoldText").gameObject.gameObject.GetComponent<TextMeshProUGUI>();
+
+        hoverClip = Resources.Load("Click") as AudioClip;
+
+        menuButton = GameObject.Find("MenuButton").gameObject;
         menuButton.GetComponent<Button>().onClick.AddListener(MenuButtonClicked);
         InitButtonHoverEvent(menuButton);
 
-        waveNumberTextMesh = gameObject.transform.Find("WaveNumberText").gameObject.GetComponent<TextMeshProUGUI>();
+        menuPanel = GameObject.Find("MenuPanel");
+
+        regularTurretTextMesh = GameObject.Find("RegularTurretText").GetComponent<TextMeshProUGUI>();
+
+        turretTextParent = GameObject.Find("TurretTextParent");
+        turretTextList = new List<GameObject>();
+        foreach (var turretText in turretTextParent.GetComponentsInChildren<Transform>())
+        {
+            if(new []{ "BasicTurretText", "RegularTurretText", "AdvancedTurretText" }.Contains(turretText.gameObject.name))
+            {
+                turretTextList.Add(turretText.gameObject);
+                turretText.gameObject.SetActive(false);
+            }
+        }
+
+        waveNumberTextMesh = GameObject.Find("WaveNumberText").gameObject.GetComponent<TextMeshProUGUI>();
 
         // Only after Canvas has initialized successfully allow the first wave to spawn
-        GameManager.Instance.UpdateGameState(GameState.SpawnWave);
+        GameManager.Instance.UpdateGameState(GameState.Init);
+
+        //NOW set things inactive
+        menuPanel.SetActive(false);
     }
     #endregion
 
@@ -92,6 +126,15 @@ public class CanvasController : MonoBehaviour
     {
         enemiesRemainingTextMesh.text = $"Enemies Remaining {newCount}";
         // StartCoroutine(GrowTextAndFadeBack(enemiesRemainingTextMesh));
+    }
+
+    public void NewTurretBuilt(int indexOfNewTurret)
+    {
+        turretTextList[indexOfNewTurret].SetActive(true);
+        if (indexOfNewTurret <= 1)
+        {
+            buildTurretCostTextMesh.text = $"Cost ${GameManager.Instance.TurretCosts[indexOfNewTurret + 1]}";
+        }
     }
 
     public void TotalGoldChanged(int newTotalGold) 
@@ -136,8 +179,7 @@ public class CanvasController : MonoBehaviour
 
     private void MenuButtonClicked()
     {
-        if (MenuPanel.activeSelf) MenuPanel.SetActive(false);
-        else MenuPanel.SetActive(true);
+        menuPanel.SetActive(!menuPanel.activeSelf);
     }
 
     private void HoverMouseNoise(UnityEngine.EventSystems.BaseEventData baseEvent)
@@ -149,26 +191,7 @@ public class CanvasController : MonoBehaviour
     #region Turrets
     public void BuildTurret()
     {
-        var numberOfUnlockedTurrets = GameManager.Instance.AllTurrets.Count;
-        if (numberOfUnlockedTurrets >= 3) return;
-
-        if (!SuccessfullyPaidForTurret(numberOfUnlockedTurrets)) return;
-
-        var turretPrefabToInstantiate = TurretPrefab[numberOfUnlockedTurrets];
-        var positionToAddPrefab = TurretPlacements[numberOfUnlockedTurrets].transform.position;
-
-        var instantiatedTurret = Instantiate(turretPrefabToInstantiate, positionToAddPrefab, turretPrefabToInstantiate.transform.rotation);
-
-        GameManager.Instance.AllTurrets.Add(instantiatedTurret);
-    }
-
-    private bool SuccessfullyPaidForTurret(int numberOfUnlockedTurrets)
-    {
-        var costOfNextTurret = GameManager.Instance.TurretCosts[numberOfUnlockedTurrets];
-        if (GameManager.Instance.TotalGold < costOfNextTurret) return false;
-
-        GameManager.Instance.ChangeTotalGoldBy(-costOfNextTurret);
-        return true;
+        GameManager.Instance.BuildTurret();
     }
     #endregion
 

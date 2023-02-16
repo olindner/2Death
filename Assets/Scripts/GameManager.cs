@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     public event Action<bool> AutoAttackChanged;
     public event Action<int> EnemyCountChanged;
+    public event Action<int> NewTurretBuilt;
     public event Action<int> TotalGoldChanged;
     public event Action<int> WaveNumberChanged;
 
@@ -62,6 +64,7 @@ public class GameManager : MonoBehaviour
     {
         Title,
         MainGame,
+        Init,
         SpawnWave,
         GamePlay,
         Win,
@@ -101,8 +104,11 @@ public class GameManager : MonoBehaviour
                 AudioSourcer.Play();
 
                 break;
+            case GameState.Init:
+                InitTurrets();
+
+                break;
             case GameState.SpawnWave:
-                //Start spawning coroutine, then in coroutine will eventually trigger new state
                 StartCoroutine(SpawnWaveDriver());
                 break;
             case GameState.GamePlay:
@@ -123,7 +129,7 @@ public class GameManager : MonoBehaviour
 
     #region Audio
 
-    private AudioClip hoverClip;
+    private AudioClip HoverClip;
     private AudioSource audioSourcer;
     public AudioSource AudioSourcer 
     {
@@ -139,7 +145,7 @@ public class GameManager : MonoBehaviour
 
     public void HoverMouseNoise()
     {
-        AudioSourcer.PlayOneShot(hoverClip);
+        AudioSourcer.PlayOneShot(HoverClip);
     }
     #endregion
 
@@ -236,7 +242,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    #region AllEnemies
+    #region Enemies
     private List<GameObject> allEnemies;
     public List<GameObject> AllEnemies
     {
@@ -280,7 +286,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    #region AllTurrets
+    #region Turrets
     private List<GameObject> allTurrets;
     public List<GameObject> AllTurrets
     {
@@ -295,10 +301,43 @@ public class GameManager : MonoBehaviour
     }
 
     public List<int> TurretCosts = new List<int>{ 10, 50, 100 };
+    private GameObject TurretParentGameObject;
 
-    public void AddTurret(GameObject newTurret)
+    private void InitTurrets()
     {
-        AllTurrets.Add(newTurret);
+        AllTurrets = new List<GameObject>();
+        TurretParentGameObject = GameObject.Find("TurretParent");
+        foreach (var turret in TurretParentGameObject.GetComponentsInChildren<Transform>())
+        {
+            if(new []{ "BasicTurret", "RegularTurret", "AdvancedTurret" }.Contains(turret.gameObject.name))
+            {
+                AllTurrets.Add(turret.gameObject);
+                turret.gameObject.SetActive(false);
+            }
+        }
+        UpdateGameState(GameState.SpawnWave);
+    }
+
+    public void BuildTurret()
+    {
+        var numberOfActiveTurrets = AllTurrets.Where(turret => turret.activeSelf).Count();
+        // If all are active already, can't activate anymore
+        if (numberOfActiveTurrets == AllTurrets.Count) return;
+
+        if (!SuccessfullyPaidForTurret(numberOfActiveTurrets)) return;
+
+        AllTurrets[numberOfActiveTurrets].SetActive(true);
+
+        NewTurretBuilt?.Invoke(numberOfActiveTurrets);
+    }
+
+    private bool SuccessfullyPaidForTurret(int numberOfActiveTurrets)
+    {
+        var costOfNextTurret = TurretCosts[numberOfActiveTurrets];
+        if (TotalGold < costOfNextTurret) return false;
+
+        ChangeTotalGoldBy(-costOfNextTurret);
+        return true;
     }
     #endregion
 
@@ -326,10 +365,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         AllEnemies = new List<GameObject>();
-        AllTurrets = new List<GameObject>();
         AudioSourcer = gameObject.AddComponent<AudioSource>();
-        hoverClip = Resources.Load("Click") as AudioClip;
         GreenEnemy = Resources.Load("GreenEnemy") as GameObject;
+        HoverClip = Resources.Load("Click") as AudioClip;
 
         UpdateGameState(GameState.Title);
     }
