@@ -407,7 +407,7 @@ public class GameManager : MonoBehaviour
         UpdateGameState(GameState.Title);
     }
 
-    // This is binded to the "Start Game" button in the Menu scene
+    // This is binded to the "Start Game" button in the Menu, Lose, and Win scenes
     public void StartGame()
     {
         UpdateGameState(GameState.MainGame);
