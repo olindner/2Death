@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     public event Action<int> EnemyCountChanged;
     public event Action<int> NewTurretBuilt;
     public event Action<int> TotalGoldChanged;
+    public event Action<int> WallHealthChanged;
     public event Action<int> WaveNumberChanged;
 
     #region GameState
@@ -224,6 +225,27 @@ public class GameManager : MonoBehaviour
     {
         TotalGold += goldDelta;
         TotalGoldChanged?.Invoke(TotalGold);
+    }
+    #endregion
+
+    #region WallHealth
+    private int wallHealth = 100;
+    public int WallHealth 
+    {
+        get
+        {
+            return wallHealth;
+        }
+        set 
+        {
+            wallHealth = value;
+        }
+    }
+
+    public void ChangeWallHealthBy(int healthDelta)
+    {
+        WallHealth += healthDelta;
+        WallHealthChanged?.Invoke(WallHealth);
     }
     #endregion
 
