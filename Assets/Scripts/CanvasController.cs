@@ -31,6 +31,7 @@ public class CanvasController : MonoBehaviour
     private TextMeshProUGUI enemiesRemainingTextMesh;
     private TextMeshProUGUI goldTextMesh;
     private TextMeshProUGUI regularTurretTextMesh;
+    private TextMeshProUGUI wallHealthTextMesh;
     private TextMeshProUGUI waveNumberTextMesh;
     #endregion
     
@@ -41,6 +42,7 @@ public class CanvasController : MonoBehaviour
         GameManager.Instance.EnemyCountChanged += EnemyCountChanged;
         GameManager.Instance.NewTurretBuilt += NewTurretBuilt;
         GameManager.Instance.TotalGoldChanged += TotalGoldChanged;
+        GameManager.Instance.WallHealthChanged += WallHealthChanged;
         GameManager.Instance.WaveNumberChanged += WaveNumberChanged;
 
         blueBackground = Resources.Load<Sprite>("BlueBackground");
@@ -56,6 +58,7 @@ public class CanvasController : MonoBehaviour
             GameManager.Instance.EnemyCountChanged -= EnemyCountChanged;
             GameManager.Instance.NewTurretBuilt -= NewTurretBuilt;
             GameManager.Instance.TotalGoldChanged -= TotalGoldChanged;
+            GameManager.Instance.WallHealthChanged -= WallHealthChanged;
             GameManager.Instance.WaveNumberChanged -= WaveNumberChanged;
         }
     }
@@ -102,6 +105,8 @@ public class CanvasController : MonoBehaviour
             }
         }
 
+        wallHealthTextMesh = GameObject.Find("WallHealthText").gameObject.GetComponent<TextMeshProUGUI>();
+
         waveNumberTextMesh = GameObject.Find("WaveNumberText").gameObject.GetComponent<TextMeshProUGUI>();
 
         // Only after Canvas has initialized successfully allow the first wave to spawn
@@ -137,6 +142,12 @@ public class CanvasController : MonoBehaviour
     {
         goldTextMesh.text = $"Gold {newTotalGold}";
         StartCoroutine(GrowTextAndFadeBack(goldTextMesh));
+    }
+
+    public void WallHealthChanged(int newWallHealth) 
+    {
+        wallHealthTextMesh.text = $"Wall Health {newWallHealth}";
+        // Add any UI grow or highlight here
     }
 
     public void WaveNumberChanged(int newWaveNumber) 

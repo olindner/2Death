@@ -846,7 +846,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7054492493122232214, guid: 6659de24afee5443a827e6673104d8f3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 1.6600001
       objectReference: {fileID: 0}
     - target: {fileID: 7054492493122232214, guid: 6659de24afee5443a827e6673104d8f3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2678,7 +2678,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7054492493122232214, guid: 7503c4ce8d69c4250a92782d6116fe70, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -0.3399999
       objectReference: {fileID: 0}
     - target: {fileID: 7054492493122232214, guid: 7503c4ce8d69c4250a92782d6116fe70, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3101,7 +3101,7 @@ GameObject:
   - component: {fileID: 1467943922}
   - component: {fileID: 1467943921}
   m_Layer: 0
-  m_Name: TilemapTower
+  m_Name: TowerWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3135,7 +3135,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 8, y: -0.9221077}
+  m_Offset: {x: 8.171586, y: -0.9221077}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -3146,7 +3146,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.2001286, y: 6.7944717}
+  m_Size: {x: 2.856954, y: 6.7944717}
   m_EdgeRadius: 0
 --- !u!483693784 &1467943922
 TilemapRenderer:
@@ -3409,7 +3409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7054492493122232214, guid: 31c3408b045584928bb0103b9360bc46, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3
+      value: -2.34
       objectReference: {fileID: 0}
     - target: {fileID: 7054492493122232214, guid: 31c3408b045584928bb0103b9360bc46, type: 3}
       propertyPath: m_LocalPosition.z

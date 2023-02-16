@@ -121,6 +121,10 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Lose:
                 SceneManager.LoadScene("LoseScene");
+
+                // var loseMusic = Resources.Load("LoseMusic") as AudioClip;
+                // AudioSourcer.clip = loseMusic;
+                // AudioSourcer.Play();
                 break;
             default:
                 break;
@@ -246,6 +250,11 @@ public class GameManager : MonoBehaviour
     {
         WallHealth += healthDelta;
         WallHealthChanged?.Invoke(WallHealth);
+
+        if (WallHealth <= 0)
+        {
+            UpdateGameState(GameState.Lose);
+        }
     }
     #endregion
 

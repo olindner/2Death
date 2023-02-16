@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -4204736373216440103}
   m_Layer: 0
   m_Name: YellowShot
-  m_TagString: Untagged
+  m_TagString: projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9161937116866397095
 SpriteRenderer:
@@ -99,7 +99,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageClass: 1
-  Speed: 3
   Damage: 20
 --- !u!58 &-4204736373216440103
 CircleCollider2D:

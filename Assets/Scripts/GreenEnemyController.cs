@@ -6,6 +6,7 @@ using GameState = GameManager.GameState;
 
 public class GreenEnemyController : MonoBehaviour
 {
+    #region Variable References
     [SerializeField] GameObject HealthText;
 
     private IEnumerator currentCoroutine = null;
@@ -16,11 +17,14 @@ public class GreenEnemyController : MonoBehaviour
     private Color targetColor;
     private float health = 100f;
     private float damageFadeSpeed = 1f;
-    private float speed = 0.3f;
+    private float speed = 1f;
+    private int damageValue = 5;
     private int goldWorth = 5;
     private byte highlightedAlpha = 255;
     private byte dimmedAlpha = 200;
+    #endregion
 
+    #region Built In Functions
     void Start()
     {
         targetPoint = GameObject.Find("TargetPoint");
@@ -33,7 +37,9 @@ public class GreenEnemyController : MonoBehaviour
     {
         transform.position = Vector2.MoveTowards(transform.position, targetPoint.transform.position, speed * Time.deltaTime);
     }
+    #endregion
 
+    #region Mouse Functions
     void OnMouseEnter()
     {
         Highlight(spriteRenderer);
@@ -56,18 +62,36 @@ public class GreenEnemyController : MonoBehaviour
     {
         Dim(spriteRenderer);
     }
+    #endregion
 
-    // Hit with Projectile
-    void OnTriggerEnter2D (Collider2D coll)
+    #region Collisions, Damage, and Death
+    private void OnTriggerEnter2D(Collider2D coll)
     {
-        var damage = coll.gameObject.GetComponent<Projectile>().Damage;
-        
-        Destroy(coll.gameObject);
-
-        TakeDamage(damage);
+        if (coll.gameObject.tag == "projectile")
+        {
+            var damage = coll.gameObject.GetComponent<Projectile>().Damage;
+            Destroy(coll.gameObject);
+            TakeDamage(damage);
+        }
+        else
+        {
+            return;
+        }
     }
 
-    void TakeDamage(float damage)
+    private void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.name == "TowerWall")
+        {
+            StartCoroutine(DamageTowerWallLoop());
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    private void TakeDamage(float damage)
     {
         if (currentCoroutine != null)
         {
@@ -91,7 +115,27 @@ public class GreenEnemyController : MonoBehaviour
         }
     }
 
-    // Fades to targetColor over time
+    private void Die()
+    {
+        GameManager.Instance.ChangeTotalGoldBy(goldWorth);
+
+        GameManager.Instance.EnemyDied();
+
+        Destroy(gameObject);
+    }
+
+    private IEnumerator DamageTowerWallLoop()
+    {
+        while(true)
+        {
+            GameManager.Instance.ChangeWallHealthBy(-damageValue);
+
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    #endregion
+
+    #region Color Change Helpers
     IEnumerator TargetColorFade(SpriteRenderer sr, float duration)
     {
         float time = 0;
@@ -133,13 +177,5 @@ public class GreenEnemyController : MonoBehaviour
         colorVar.b = 0;
         sr.color = colorVar;
     }
-
-    void Die()
-    {
-        GameManager.Instance.ChangeTotalGoldBy(goldWorth);
-
-        GameManager.Instance.EnemyDied();
-
-        Destroy(gameObject);
-    }
+    #endregion
 }
