@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Wave
-    private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25 };
+    private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
     private int waveNumber;
     public int WaveNumber 
     {
@@ -342,6 +342,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region AutoAttack
+    private int costOfAutoAttack = 100;
     private bool autoAttack = false;
     public bool AutoAttack
     {
@@ -356,9 +357,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ToggleAutoAttack()
+    public void PurchaseAutoAttack()
     {
-        AutoAttack = !AutoAttack;
+        if (TotalGold < costOfAutoAttack || AutoAttack == true) return;
+
+        ChangeTotalGoldBy(-costOfAutoAttack);
+        AutoAttack = true;
     }
     #endregion
 

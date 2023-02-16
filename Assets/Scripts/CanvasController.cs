@@ -13,10 +13,7 @@ public class CanvasController : MonoBehaviour
     private AudioClip hoverClip;
     private AudioSource audioSource;
 
-    private Color32 EnableColor = new Color32(195, 225, 165, 255);
-    private Color32 DisableColor = new Color32(225, 165, 165, 255);
-
-    private GameObject autoButton;
+    private GameObject autoAttackButton;
     private GameObject backgroundObject;
     private GameObject menuButton;
     private GameObject menuPanel;
@@ -69,10 +66,9 @@ public class CanvasController : MonoBehaviour
 
         audioSource = gameObject.AddComponent<AudioSource>();
 
-        autoButton = gameObject.transform.Find("AutoButton").gameObject;
-        autoButton.GetComponent<Button>().onClick.AddListener(AutoButtonClicked);
-        autoButton.GetComponent<Image>().color = DisableColor;
-        InitButtonHoverEvent(autoButton);
+        autoAttackButton = GameObject.Find("AutoAttackButton");
+        autoAttackButton.GetComponent<Button>().onClick.AddListener(AutoAttackButtonClicked);
+        InitButtonHoverEvent(autoAttackButton);
 
         backgroundObject = GameObject.Find("Background");
         backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
@@ -111,7 +107,7 @@ public class CanvasController : MonoBehaviour
         // Only after Canvas has initialized successfully allow the first wave to spawn
         GameManager.Instance.UpdateGameState(GameState.Init);
 
-        //NOW set things inactive
+        // NOW set things inactive
         menuPanel.SetActive(false);
     }
     #endregion
@@ -119,7 +115,7 @@ public class CanvasController : MonoBehaviour
     #region Observables
     public void AutoAttackChanged(bool autoAttack)
     {
-        autoButton.GetComponent<Image>().color = autoAttack ? EnableColor : DisableColor;
+        autoAttackButton.GetComponent<Button>().interactable = false;
     }
     
     public void EnemyCountChanged(int newCount) 
@@ -148,13 +144,17 @@ public class CanvasController : MonoBehaviour
         waveNumberTextMesh.text = $"Wave {newWaveNumber}";
         StartCoroutine(GrowTextAndFadeBack(waveNumberTextMesh));
 
-        if (newWaveNumber == 3)
+        if (newWaveNumber % 3 == 0)
         {
             backgroundObject.GetComponent<SpriteRenderer>().sprite = greenBackground;
         }
-        if (newWaveNumber == 5)
+        else if (newWaveNumber % 5 == 0)
         {
             backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
+        }
+        else
+        {
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = blueBackground;
         }
     }
     #endregion
@@ -172,9 +172,9 @@ public class CanvasController : MonoBehaviour
         trigger.triggers.Add(entry);
     }
 
-    private void AutoButtonClicked()
+    private void AutoAttackButtonClicked()
     {
-        GameManager.Instance.ToggleAutoAttack();
+        GameManager.Instance.PurchaseAutoAttack();
     }
 
     private void MenuButtonClicked()
