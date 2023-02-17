@@ -35,7 +35,10 @@ public class GreenEnemyController : MonoBehaviour
 
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, targetPoint.transform.position, speed * Time.deltaTime);
+        if (targetPoint != null)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, targetPoint.transform.position, speed * Time.deltaTime);
+        }
     }
     #endregion
 

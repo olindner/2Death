@@ -106,6 +106,10 @@ public class GameManager : MonoBehaviour
 
                 break;
             case GameState.Init:
+                TotalGold = 0;
+                WallHealth = 100;
+                WaveNumber = 0;
+
                 InitTurrets();
 
                 break;
@@ -117,14 +121,20 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Win:
                 SceneManager.LoadScene("WinScene");
-                // Play win music
+                
+                var winClip = Resources.Load("WinMusic") as AudioClip;
+                AudioSourcer.clip = winClip;
+                AudioSourcer.time = 0.5f;
+                AudioSourcer.Play();
+
                 break;
             case GameState.Lose:
                 SceneManager.LoadScene("LoseScene");
 
-                // var loseMusic = Resources.Load("LoseMusic") as AudioClip;
-                // AudioSourcer.clip = loseMusic;
-                // AudioSourcer.Play();
+                var loseMusic = Resources.Load("LoseMusic") as AudioClip;
+                AudioSourcer.clip = loseMusic;
+                AudioSourcer.time = 0.5f;
+                AudioSourcer.Play();
                 break;
             default:
                 break;
@@ -229,11 +239,16 @@ public class GameManager : MonoBehaviour
     {
         TotalGold += goldDelta;
         TotalGoldChanged?.Invoke(TotalGold);
+
+        if (TotalGold >= 250)
+        {
+            UpdateGameState(GameState.Win);
+        }
     }
     #endregion
 
     #region WallHealth
-    private int wallHealth = 100;
+    private int wallHealth;
     public int WallHealth 
     {
         get
