@@ -716,8 +716,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 700.1, y: 483}
-  m_SizeDelta: {x: 259.9, y: 50}
+  m_AnchoredPosition: {x: 812.68335, y: 483}
+  m_SizeDelta: {x: 147.3167, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &491432797
 MonoBehaviour:
@@ -739,7 +739,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Wall Health 100
+  m_text: Wall 100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2273,8 +2273,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 86.90173, y: 483}
-  m_SizeDelta: {x: 353.4625, y: 50}
+  m_AnchoredPosition: {x: 147.58496, y: 483}
+  m_SizeDelta: {x: 414.1457, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &914817955
 MonoBehaviour:
@@ -2296,7 +2296,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enemies Remaining 0
+  m_text: Enemies Remaining 0/5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

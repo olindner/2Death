@@ -17,7 +17,7 @@ public class GreenEnemyController : MonoBehaviour
     private Color targetColor;
     private float health = 100f;
     private float damageFadeSpeed = 1f;
-    private float speed = 1.5f;
+    private float speed = 1.2f;
     private int damageValue = 5;
     private int goldWorth = 5;
     private byte highlightedAlpha = 255;
@@ -122,7 +122,7 @@ public class GreenEnemyController : MonoBehaviour
     {
         GameManager.Instance.ChangeTotalGoldBy(goldWorth);
 
-        GameManager.Instance.EnemyDied();
+        GameManager.Instance.EnemiesLeftThisWave--;
 
         Destroy(gameObject);
     }

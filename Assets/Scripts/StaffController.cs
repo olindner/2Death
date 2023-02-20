@@ -17,11 +17,11 @@ public class StaffController : MonoBehaviour
         {
             if (GameManager.Instance.AllEnemies.Count > 0)
             {
-                if (targetTransform == null)
+                if (targetTransform == null && GameManager.Instance.AutoAttack)
                 {
                     FindClosestEnemy();
                 }
-                if (GameManager.Instance.AutoAttack)
+                if (targetTransform != null)
                 {
                     SpawnProjectile();
                 }

@@ -123,9 +123,9 @@ public class CanvasController : MonoBehaviour
         autoAttackButton.GetComponent<Button>().interactable = false;
     }
     
-    public void EnemyCountChanged(int newCount) 
+    public void EnemyCountChanged(int enemiesLeftThisWave) 
     {
-        enemiesRemainingTextMesh.text = $"Enemies Remaining {newCount}";
+        enemiesRemainingTextMesh.text = $"Enemies Remaining {enemiesLeftThisWave}/{GameManager.Instance.TotalEnemiesThisWave}";
         // StartCoroutine(GrowTextAndFadeBack(enemiesRemainingTextMesh));
     }
 
@@ -146,12 +146,13 @@ public class CanvasController : MonoBehaviour
 
     public void WallHealthChanged(int newWallHealth) 
     {
-        wallHealthTextMesh.text = $"Wall Health {newWallHealth}";
+        wallHealthTextMesh.text = $"Wall {newWallHealth}";
         // Add any UI grow or highlight here
     }
 
     public void WaveNumberChanged(int newWaveNumber) 
     {
+        Debug.Log($"WaveNumberChanged: {newWaveNumber}");
         waveNumberTextMesh.text = $"Wave {newWaveNumber}/{GameManager.Instance.EnemiesPerWave.Count - 1}";
         StartCoroutine(GrowTextAndFadeBack(waveNumberTextMesh));
 

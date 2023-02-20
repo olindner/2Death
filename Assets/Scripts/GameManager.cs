@@ -61,6 +61,19 @@ public class GameManager : MonoBehaviour
     public event Action<int> WaveNumberChanged;
     #endregion
 
+    #region Buttons
+    // This is binded to the "Start Game" button in the Menu, Lose, and Win scenes
+    public void StartGame()
+    {
+        UpdateGameState(GameState.MainGame);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    #endregion
+
     #region GameState
 
     public enum GameState
@@ -116,6 +129,7 @@ public class GameManager : MonoBehaviour
 
                 break;
             case GameState.SpawnWave:
+                Debug.Log("SpawnWave called");
                 StartCoroutine(SpawnWaveDriver());
                 break;
             case GameState.GamePlay:
@@ -165,64 +179,7 @@ public class GameManager : MonoBehaviour
         AudioSourcer.PlayOneShot(HoverClip);
     }
     #endregion
-
-    #region Wave
-    public readonly List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25 };
-    private int waveNumber;
-    public int WaveNumber 
-    {
-        get
-        {
-            return waveNumber;
-        }
-        set 
-        {
-            waveNumber = value;
-            WaveNumberChanged?.Invoke(waveNumber);
-        }
-    }
-    private GameObject GreenEnemy;
-
-    private IEnumerator SpawnWaveDriver()
-    {
-        WaveNumber++;
-
-        if (WaveNumber >= EnemiesPerWave.Count - 1)
-        {
-            UpdateGameState(GameState.Win);
-            yield return null;
-        }
-        else
-        {
-            UpdateGameState(GameState.GamePlay);
-        }
-
-        // This short delay is for displaying title
-        yield return new WaitForSeconds(1);
-
-        int numberOfEnemiesToSpawn = EnemiesPerWave[WaveNumber];
-
-        for (var i = 0; i < numberOfEnemiesToSpawn; i++)
-        {
-            SpawnEnemy();
-
-            // Final enemy spawn should not delay game logic
-            if (i != numberOfEnemiesToSpawn)
-            {
-                yield return new WaitForSeconds(5);
-            }
-        }
-
-        yield return null;
-    }
-
-    private void SpawnEnemy()
-    {
-        var enemy = Instantiate(GreenEnemy, new Vector2(-11, -2), Quaternion.identity);
-        AddEnemy(enemy);
-    }
-    #endregion
-
+    
     #region TotalGold
     private int totalGold;
     public int TotalGold 
@@ -290,14 +247,100 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    #region Enemies
+    #region Waves and Enemies
+    public readonly List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25 };
+    private int waveNumber;
+    public int WaveNumber 
+    {
+        get
+        {
+            return waveNumber;
+        }
+        set 
+        {
+            waveNumber = value;
+            TotalEnemiesThisWave = EnemiesPerWave[waveNumber];
+            EnemiesLeftThisWave = TotalEnemiesThisWave;
+            WaveNumberChanged?.Invoke(waveNumber);
+        }
+    }
+    private int totalEnemiesThisWave;
+    public int TotalEnemiesThisWave
+    {
+        get
+        {
+            return totalEnemiesThisWave;
+        }
+        set 
+        {
+            totalEnemiesThisWave = value;
+        }
+    }
+    private int enemiesLeftThisWave;
+    public int EnemiesLeftThisWave
+    {
+        get
+        {
+            return enemiesLeftThisWave;
+        }
+        set 
+        {
+            enemiesLeftThisWave = value;
+            EnemyCountChanged?.Invoke(enemiesLeftThisWave);
+
+            if (enemiesLeftThisWave == 0 && State == GameState.GamePlay)
+            {
+                // Could trigger a wait screen to prepare for next wave
+                UpdateGameState(GameState.SpawnWave);
+            }
+        }
+    }
+
+    private GameObject GreenEnemy;
+
+    private IEnumerator SpawnWaveDriver()
+    {
+        WaveNumber++;
+
+        if (WaveNumber >= EnemiesPerWave.Count - 1)
+        {
+            UpdateGameState(GameState.Win);
+            yield return null;
+        }
+
+        // This short delay is for displaying title
+        yield return new WaitForSeconds(1);
+
+        int numberOfEnemiesToSpawn = EnemiesPerWave[WaveNumber];
+
+        for (var i = 0; i < numberOfEnemiesToSpawn; i++)
+        {
+            SpawnEnemy();
+
+            // Final enemy spawn should not delay game logic
+            if (i != numberOfEnemiesToSpawn)
+            {
+                yield return new WaitForSeconds(5);
+            }
+        }
+
+        UpdateGameState(GameState.GamePlay);
+
+        yield return null;
+    }
+
+    private void SpawnEnemy()
+    {
+        var enemy = Instantiate(GreenEnemy, new Vector2(-11, -2), Quaternion.identity);
+        AddEnemy(enemy);
+    }
+
     private List<GameObject> allEnemies;
     public List<GameObject> AllEnemies
     {
         get
         {
             allEnemies.RemoveAll(enemy => enemy == null);
-            StartCoroutine(UpdateEnemyCount());
             return allEnemies; // Could return AsReadOnly()
         }
         set
@@ -309,28 +352,6 @@ public class GameManager : MonoBehaviour
     private void AddEnemy(GameObject newEnemy)
     {
         AllEnemies.Add(newEnemy);
-    }
-
-    public void EnemyDied()
-    {
-        StartCoroutine(UpdateEnemyCount());
-
-        if (AllEnemies.Count <= 1)
-        {
-            //TODO: Check for win condition
-
-            // Could trigger a wait screen to prepare for next wave
-            UpdateGameState(GameState.SpawnWave);
-        }
-    }
-
-    private IEnumerator UpdateEnemyCount()
-    {
-        // Hack for allowing enemy to die before updating count
-        yield return new WaitForSeconds(0.1f);
-
-        allEnemies.RemoveAll(enemy => enemy == null);
-        EnemyCountChanged?.Invoke(allEnemies.Count);
     }
     #endregion
 
@@ -426,16 +447,5 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    #region Buttons
-    // This is binded to the "Start Game" button in the Menu, Lose, and Win scenes
-    public void StartGame()
-    {
-        UpdateGameState(GameState.MainGame);
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-    #endregion
+    
 }
