@@ -52,12 +52,14 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region Observables
     public event Action<bool> AutoAttackChanged;
     public event Action<int> EnemyCountChanged;
     public event Action<int> NewTurretBuilt;
     public event Action<int> TotalGoldChanged;
     public event Action<int> WallHealthChanged;
     public event Action<int> WaveNumberChanged;
+    #endregion
 
     #region GameState
 
@@ -165,7 +167,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Wave
-    private List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
+    public readonly List<int> EnemiesPerWave = new List<int>{ 0, 5, 10, 15, 20, 25 };
     private int waveNumber;
     public int WaveNumber 
     {
@@ -412,6 +414,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region Built In Functions
     private void Start()
     {
         AllEnemies = new List<GameObject>();
@@ -421,7 +424,9 @@ public class GameManager : MonoBehaviour
 
         UpdateGameState(GameState.Title);
     }
+    #endregion
 
+    #region Buttons
     // This is binded to the "Start Game" button in the Menu, Lose, and Win scenes
     public void StartGame()
     {
@@ -432,4 +437,5 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+    #endregion
 }

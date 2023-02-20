@@ -152,7 +152,7 @@ public class CanvasController : MonoBehaviour
 
     public void WaveNumberChanged(int newWaveNumber) 
     {
-        waveNumberTextMesh.text = $"Wave {newWaveNumber}";
+        waveNumberTextMesh.text = $"Wave {newWaveNumber}/{GameManager.Instance.EnemiesPerWave.Count - 1}";
         StartCoroutine(GrowTextAndFadeBack(waveNumberTextMesh));
 
         if (newWaveNumber % 3 == 0)

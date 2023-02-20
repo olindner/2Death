@@ -716,8 +716,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 701, y: 483}
-  m_SizeDelta: {x: 395.3643, y: 50}
+  m_AnchoredPosition: {x: 700.1, y: 483}
+  m_SizeDelta: {x: 259.9, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &491432797
 MonoBehaviour:
@@ -766,8 +766,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2062,7 +2062,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -791, y: 66.229614}
+  m_AnchoredPosition: {x: -597, y: 180}
   m_SizeDelta: {x: -1700, y: -738.7133}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &831136289
@@ -2273,8 +2273,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 45, y: 483}
-  m_SizeDelta: {x: 395.3643, y: 50}
+  m_AnchoredPosition: {x: 86.90173, y: 483}
+  m_SizeDelta: {x: 353.4625, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &914817955
 MonoBehaviour:
@@ -2323,8 +2323,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2408,8 +2408,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -469, y: 483}
-  m_SizeDelta: {x: 150, y: 50}
+  m_AnchoredPosition: {x: -445.99316, y: 483}
+  m_SizeDelta: {x: 173.0069, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &937120771
 MonoBehaviour:
@@ -2431,7 +2431,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Wave 0
+  m_text: Wave 0/5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2458,8 +2458,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
