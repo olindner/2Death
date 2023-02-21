@@ -109,6 +109,7 @@ public class GameManager : MonoBehaviour
             case GameState.Title:
                 var titleClip = Resources.Load("TitleScreen") as AudioClip;
                 AudioSourcer.clip = titleClip;
+                AudioSourcer.loop = true;
                 AudioSourcer.Play();
 
                 break;
@@ -117,6 +118,7 @@ public class GameManager : MonoBehaviour
 
                 var gameClip = Resources.Load("NormalGame") as AudioClip;
                 AudioSourcer.clip = gameClip;
+                AudioSourcer.loop = true;
                 AudioSourcer.Play();
 
                 break;
@@ -129,7 +131,6 @@ public class GameManager : MonoBehaviour
 
                 break;
             case GameState.SpawnWave:
-                Debug.Log("SpawnWave called");
                 StartCoroutine(SpawnWaveDriver());
                 break;
             case GameState.GamePlay:
@@ -141,6 +142,7 @@ public class GameManager : MonoBehaviour
                 var winClip = Resources.Load("WinMusic") as AudioClip;
                 AudioSourcer.clip = winClip;
                 AudioSourcer.time = 0.5f;
+                AudioSourcer.loop = true;
                 AudioSourcer.Play();
 
                 break;
@@ -150,6 +152,7 @@ public class GameManager : MonoBehaviour
                 var loseMusic = Resources.Load("LoseMusic") as AudioClip;
                 AudioSourcer.clip = loseMusic;
                 AudioSourcer.time = 0.5f;
+                AudioSourcer.loop = true;
                 AudioSourcer.Play();
                 break;
             default:
@@ -302,7 +305,7 @@ public class GameManager : MonoBehaviour
     {
         WaveNumber++;
 
-        if (WaveNumber >= EnemiesPerWave.Count - 1)
+        if (WaveNumber >= EnemiesPerWave.Count)
         {
             UpdateGameState(GameState.Win);
             yield return null;
