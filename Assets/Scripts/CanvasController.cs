@@ -18,6 +18,7 @@ public class CanvasController : MonoBehaviour
     private GameObject menuButton;
     private GameObject menuPanel;
     private GameObject turretTextParent;
+    private GameObject waveStartText;
 
     private List<GameObject> turretTextList;
 
@@ -109,6 +110,9 @@ public class CanvasController : MonoBehaviour
 
         waveNumberTextMesh = GameObject.Find("WaveNumberText").gameObject.GetComponent<TextMeshProUGUI>();
 
+        waveStartText = GameObject.Find("WaveStartText");
+        waveStartText.SetActive(false);
+
         // Only after Canvas has initialized successfully allow the first wave to spawn
         GameManager.Instance.UpdateGameState(GameState.Init);
 
@@ -126,7 +130,6 @@ public class CanvasController : MonoBehaviour
     public void EnemyCountChanged(int enemiesLeftThisWave) 
     {
         enemiesRemainingTextMesh.text = $"Enemies Remaining {enemiesLeftThisWave}/{GameManager.Instance.TotalEnemiesThisWave}";
-        // StartCoroutine(GrowTextAndFadeBack(enemiesRemainingTextMesh));
     }
 
     public void NewTurretBuilt(int indexOfNewTurret)
@@ -141,7 +144,6 @@ public class CanvasController : MonoBehaviour
     public void TotalGoldChanged(int newTotalGold) 
     {
         goldTextMesh.text = $"Gold {newTotalGold}";
-        StartCoroutine(GrowTextAndFadeBack(goldTextMesh));
     }
 
     public void WallHealthChanged(int newWallHealth) 
@@ -153,7 +155,9 @@ public class CanvasController : MonoBehaviour
     public void WaveNumberChanged(int newWaveNumber) 
     {
         waveNumberTextMesh.text = $"Wave {newWaveNumber}/{GameManager.Instance.EnemiesPerWave.Count - 1}";
-        StartCoroutine(GrowTextAndFadeBack(waveNumberTextMesh));
+
+        waveStartText.GetComponent<TextMeshProUGUI>().text = $"WAVE {newWaveNumber} START!";
+        StartCoroutine(DisplayWaitAndDisable(waveStartText));
 
         if (newWaveNumber % 3 == 0)
         {
@@ -213,11 +217,20 @@ public class CanvasController : MonoBehaviour
         float sizeEnd = 36f;
         float t = 0f;
         while(t < 1f)
-        {            
+        {
             t += Time.deltaTime;
             mesh.fontSize = (int)Mathf.Lerp (sizeStart, sizeEnd, Mathf.SmoothStep(0f, 1f, t));
             yield return null;
-        }        
+        }
+    }
+
+    private IEnumerator DisplayWaitAndDisable(GameObject go)
+    {
+        go.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        go.SetActive(false); 
     }
     #endregion
 }
