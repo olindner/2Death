@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour
 
                 var gameClip = Resources.Load("NormalGame") as AudioClip;
                 AudioSourcer.clip = gameClip;
+                AudioSourcer.volume = 0.7f;
                 AudioSourcer.loop = true;
                 AudioSourcer.Play();
 
@@ -163,7 +164,12 @@ public class GameManager : MonoBehaviour
 
     #region Audio
 
+    
+    private AudioClip AutoBuildClip;
+    private AudioClip BuildTurretClip;
+    private AudioClip GoldAcquiredClip;
     private AudioClip HoverClip;
+    private AudioClip NewWaveClip;
     private AudioSource audioSourcer;
     public AudioSource AudioSourcer 
     {
@@ -262,6 +268,7 @@ public class GameManager : MonoBehaviour
         set 
         {
             waveNumber = value;
+            AudioSourcer.PlayOneShot(NewWaveClip, 0.1F);
             TotalEnemiesThisWave = EnemiesPerWave[waveNumber];
             EnemiesLeftThisWave = TotalEnemiesThisWave;
             WaveNumberChanged?.Invoke(waveNumber);
@@ -289,11 +296,11 @@ public class GameManager : MonoBehaviour
         set 
         {
             enemiesLeftThisWave = value;
+            AudioSourcer.PlayOneShot(GoldAcquiredClip, 0.2F);
             EnemyCountChanged?.Invoke(enemiesLeftThisWave);
 
             if (enemiesLeftThisWave == 0 && State == GameState.GamePlay)
             {
-                // Could trigger a wait screen to prepare for next wave
                 UpdateGameState(GameState.SpawnWave);
             }
         }
@@ -398,8 +405,8 @@ public class GameManager : MonoBehaviour
 
         if (!SuccessfullyPaidForTurret(numberOfActiveTurrets)) return;
 
+        AudioSourcer.PlayOneShot(BuildTurretClip);
         AllTurrets[numberOfActiveTurrets].SetActive(true);
-
         NewTurretBuilt?.Invoke(numberOfActiveTurrets);
     }
 
@@ -435,6 +442,7 @@ public class GameManager : MonoBehaviour
 
         ChangeTotalGoldBy(-costOfAutoAttack);
         AutoAttack = true;
+        AudioSourcer.PlayOneShot(AutoBuildClip);
     }
     #endregion
 
@@ -443,8 +451,12 @@ public class GameManager : MonoBehaviour
     {
         AllEnemies = new List<GameObject>();
         AudioSourcer = gameObject.AddComponent<AudioSource>();
+        AutoBuildClip = Resources.Load("AutoClip") as AudioClip;
+        BuildTurretClip = Resources.Load("BuildClip") as AudioClip;
         GreenEnemy = Resources.Load("GreenEnemy") as GameObject;
+        GoldAcquiredClip = Resources.Load("GoldAcquired") as AudioClip;
         HoverClip = Resources.Load("Click") as AudioClip;
+        NewWaveClip = Resources.Load("NewWave") as AudioClip;
 
         UpdateGameState(GameState.Title);
     }

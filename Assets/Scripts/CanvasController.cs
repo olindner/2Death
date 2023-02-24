@@ -15,6 +15,7 @@ public class CanvasController : MonoBehaviour
 
     private GameObject autoAttackButton;
     private GameObject backgroundObject;
+    private GameObject buildTurretButton;
     private GameObject menuButton;
     private GameObject menuPanel;
     private GameObject turretTextParent;
@@ -82,6 +83,10 @@ public class CanvasController : MonoBehaviour
         buildTurretCostTextMesh = GameObject.Find("BuildTurretCostText").gameObject.GetComponent<TextMeshProUGUI>();
         buildTurretCostTextMesh.text = $"Cost ${GameManager.Instance.TurretCosts[0]}";
 
+        buildTurretButton = GameObject.Find("BuildTurretButton");
+        buildTurretButton.GetComponent<Button>().onClick.AddListener(BuildTurret);
+        InitButtonHoverEvent(buildTurretButton);
+
         enemiesRemainingTextMesh = GameObject.Find("EnemiesRemainingText").gameObject.GetComponent<TextMeshProUGUI>();
         goldTextMesh = GameObject.Find("GoldText").gameObject.gameObject.GetComponent<TextMeshProUGUI>();
 
@@ -125,6 +130,9 @@ public class CanvasController : MonoBehaviour
     public void AutoAttackChanged(bool autoAttack)
     {
         autoAttackButton.GetComponent<Button>().interactable = false;
+        ColorBlock cb = autoAttackButton.GetComponent<Button>().colors;
+		cb.disabledColor = new Color(0f, 0.67f, 0f);
+		autoAttackButton.GetComponent<Button>().colors = cb;
     }
     
     public void EnemyCountChanged(int enemiesLeftThisWave) 
@@ -135,9 +143,15 @@ public class CanvasController : MonoBehaviour
     public void NewTurretBuilt(int indexOfNewTurret)
     {
         turretTextList[indexOfNewTurret].SetActive(true);
+
         if (indexOfNewTurret <= 1)
         {
             buildTurretCostTextMesh.text = $"Cost ${GameManager.Instance.TurretCosts[indexOfNewTurret + 1]}";
+        }
+
+        if (indexOfNewTurret + 1 >= GameManager.Instance.AllTurrets.Count)
+        {
+            buildTurretButton.GetComponent<Button>().interactable = false;
         }
     }
 
@@ -198,7 +212,7 @@ public class CanvasController : MonoBehaviour
 
     private void HoverMouseNoise(UnityEngine.EventSystems.BaseEventData baseEvent)
     {
-        audioSource.PlayOneShot(hoverClip);
+        audioSource.PlayOneShot(hoverClip, 0.25f);
     }
     #endregion
 

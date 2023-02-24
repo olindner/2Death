@@ -5,10 +5,20 @@ using System.Linq;
 
 public class StaffController : MonoBehaviour
 {
+    #region Variable References
     [SerializeField] GameObject Projectile;
     private float spawnTimer = 2f;
+    private AudioClip BallShotClip;
+    private AudioSource audioSource;
     private Transform targetTransform = null;
+    #endregion
  
+    private void Start()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        BallShotClip = Resources.Load("BallShot2") as AudioClip;
+    }
+
     private void Update()
     {
         spawnTimer -= Time.deltaTime;
@@ -39,6 +49,7 @@ public class StaffController : MonoBehaviour
 
         var projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
         projectile.GetComponent<Projectile>().SetTargetTransform(targetTransform);
+        audioSource.PlayOneShot(BallShotClip, 0.7F);
     }
 
     // Could eventually optimize to cache, queue, or k-nearest neighbors
