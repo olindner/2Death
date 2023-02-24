@@ -149,7 +149,6 @@ public class CanvasController : MonoBehaviour
     public void WallHealthChanged(int newWallHealth) 
     {
         wallHealthTextMesh.text = $"Wall {newWallHealth}";
-        // Add any UI grow or highlight here
     }
 
     public void WaveNumberChanged(int newWaveNumber) 
@@ -228,7 +227,7 @@ public class CanvasController : MonoBehaviour
     {
         go.SetActive(true);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         go.SetActive(false); 
     }

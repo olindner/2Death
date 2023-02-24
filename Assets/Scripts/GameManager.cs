@@ -372,7 +372,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public List<int> TurretCosts = new List<int>{ 10, 50, 100 };
+    public List<int> TurretCosts = new List<int>{ 20, 30, 40 };
     private GameObject TurretParentGameObject;
 
     private void InitTurrets()
@@ -414,7 +414,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region AutoAttack
-    private int costOfAutoAttack = 100;
+    private int costOfAutoAttack = 50;
     private bool autoAttack = false;
     public bool AutoAttack
     {
@@ -449,6 +449,4 @@ public class GameManager : MonoBehaviour
         UpdateGameState(GameState.Title);
     }
     #endregion
-
-    
 }
