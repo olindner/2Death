@@ -23,9 +23,9 @@ public class CanvasController : MonoBehaviour
 
     private List<GameObject> turretTextList;
 
+    private Sprite blackBackground;
     private Sprite blueBackground;
     private Sprite greenBackground;
-    private Sprite purpleBackground;
     
     private TextMeshProUGUI advancedTurretTextMesh;
     private TextMeshProUGUI basicTurretTextMesh;
@@ -47,9 +47,9 @@ public class CanvasController : MonoBehaviour
         GameManager.Instance.WallHealthChanged += WallHealthChanged;
         GameManager.Instance.WaveNumberChanged += WaveNumberChanged;
 
+        blackBackground = Resources.Load<Sprite>("BlackBackground");
         blueBackground = Resources.Load<Sprite>("BlueBackground");
         greenBackground = Resources.Load<Sprite>("GreenBackground");
-        purpleBackground = Resources.Load<Sprite>("PurpleBackground");
     }
 
     private void OnDestroy()
@@ -178,7 +178,7 @@ public class CanvasController : MonoBehaviour
         }
         else if (newWaveNumber % 5 == 0)
         {
-            backgroundObject.GetComponent<SpriteRenderer>().sprite = purpleBackground;
+            backgroundObject.GetComponent<SpriteRenderer>().sprite = blackBackground;
         }
         else
         {
