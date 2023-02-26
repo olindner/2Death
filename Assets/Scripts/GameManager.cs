@@ -268,10 +268,13 @@ public class GameManager : MonoBehaviour
         set 
         {
             waveNumber = value;
-            AudioSourcer.PlayOneShot(NewWaveClip, 0.1F);
-            TotalEnemiesThisWave = EnemiesPerWave[waveNumber];
-            EnemiesLeftThisWave = TotalEnemiesThisWave;
-            WaveNumberChanged?.Invoke(waveNumber);
+            if (waveNumber < EnemiesPerWave.Count)
+            {
+                AudioSourcer.PlayOneShot(NewWaveClip, 0.1F);
+                TotalEnemiesThisWave = EnemiesPerWave[waveNumber];
+                EnemiesLeftThisWave = TotalEnemiesThisWave;
+                WaveNumberChanged?.Invoke(waveNumber);
+            }
         }
     }
     private int totalEnemiesThisWave;
