@@ -2,10 +2,12 @@
 
 Defend your wizard's castle in this unique castle-defender game! 
 
+**[Play here on Itch.io!](https://olindner.itch.io/2death)**
+
 **Controls**
 
-- Click an enemy - Attack using turrets
-- Click on Auto - Trigger automatic targetting by turrets
+- Click an Enemy - Cause base click damage, also sets temporary targetting for Turrets
+- Click on Upgrade Menu - Open/close the panel to allow Turret building and upgrading
 
 **Gameplay**
 
