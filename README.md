@@ -13,10 +13,18 @@ Defend your wizard's castle in this unique castle-defender game!
 
 Include screenshots here.
 
+**Behind the Scenes**
+
+While there will likely always be design and UI updates, I am most focused on creating a clear and scalable code base. Some of my design highlights are:
+- Game Manager as a Singleton
+    - Uses static state and duplication guards, allowing single source-of-truth and access from any script
+- Observables/Subscribers
+    - Allows functional cascading when object state changes (e.g. updating the UI display when an enemy is damaged)
+- State System
+    - Routes game logic (Gameplay, Various Menus, Spawning Enemies, etc)
+- Auto Targeting
+    - Efficiently calculates the closeset enemy for turret firing and makes the game feel more developed
+
 **Inspiration**
 
-This project was originally started to compete in a game jam, but completion was postponed to build out functionality and style. I love the idea of castle defender and tower defense games, so this was my attempt at understanding how they work behind the scenes!
-
-**Tips**
-
-- Try hard!
+This project was originally started to compete in a game jam, but turned into an effort of understanding how state-based games work. I have always been fascinated by tower-defense games, so I was curious how difficult it was to create one from scratch!
