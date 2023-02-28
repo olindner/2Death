@@ -11,7 +11,16 @@ Defend your wizard's castle in this unique castle-defender game!
 
 **Gameplay**
 
-Include screenshots here.
+You find yourself, the Light Wizard, sitting atop your noble watchtower post on a warm summer day. All of a sudden, you spy a horde of green goblins attempting to storm the wall and break into the peaceful city!
+
+<img src="Assets/Screenshots/WallAndTurrets.png" title="Build your defenses!" width="200px" height="600px"> <img src="Assets/Screenshots/TurretMenu.png" title="Use your arsenal to defend your Wizard's castle!" width="350px" height="350px"> 
+<img src="Assets/Screenshots/AutoAttack.png" title="Save up money for better upgrades!" width="350px" height="500px">
+
+It's time to use all your wizarding spells to send these goblins back from whence they came!
+
+<img src="Assets/Screenshots/ActiveShots.png" title="Repel the enemies!" width="600px" height="350px">
+
+Use your staff to instantly deliver small damage spells directly to their scaly bodies! Collect gold and build up your magical turret defense to help you in the fight against evil!
 
 **Behind the Scenes**
 
