@@ -9,18 +9,17 @@ Defend your wizard's castle in this unique castle-defender game!
 - Click an Enemy - Cause base click damage, also sets temporary targetting for Turrets
 - Click on Upgrade Menu - Open/close the panel to allow Turret building and upgrading
 
-**Gameplay**
+**Story**
 
-You find yourself, the Light Wizard, sitting atop your noble watchtower post on a warm summer day. All of a sudden, you spy a horde of green goblins attempting to storm the wall and break into the peaceful city!
+<p align="center">You find yourself, the Light Wizard, sitting atop your noble watchtower post on a warm summer day.</p>
 
-<img src="Assets/Screenshots/WallAndTurrets.png" title="Build your defenses!" width="200px" height="600px"> <img src="Assets/Screenshots/TurretMenu.png" title="Use your arsenal to defend your Wizard's castle!" width="350px" height="350px"> 
-<img src="Assets/Screenshots/AutoAttack.png" title="Save up money for better upgrades!" width="350px" height="500px">
+<p align="center">All of a sudden, you spy a horde of green goblins attempting to storm the wall and break into the peaceful city!</p>
 
-It's time to use all your wizarding spells to send these goblins back from whence they came!
+<p align="center">It's time to use all your wizarding spells to send these goblins back from whence they came!</p>
 
-<img src="Assets/Screenshots/ActiveShots.png" title="Repel the enemies!" width="600px" height="350px">
+<p align="center">Use your staff to instantly deliver small damage spells directly to their scaly bodies!</p>
 
-Use your staff to instantly deliver small damage spells directly to their scaly bodies! Collect gold and build up your magical turret defense to help you in the fight against evil!
+<p align="center">Collect gold and build up your magical turret defense to help you in the fight against evil!</p>
 
 **Behind the Scenes**
 
@@ -37,3 +36,10 @@ While there will likely always be design and UI updates, I am most focused on cr
 **Inspiration**
 
 This project was originally started to compete in a game jam, but turned into an effort of understanding how state-based games work. I have always been fascinated by tower-defense games, so I was curious how difficult it was to create one from scratch!
+
+**Screenshots**
+
+
+<img align="left" width="33%" src="Assets/Screenshots/WizardWallNEW.png" title="Build your defenses!" width="200px" height="800px"> 
+<img align="center" src="Assets/Screenshots/BuyMenuNEW.png" title="Use your arsenal to defend your Wizard's castle!" width="350px" height="350px"> 
+<img src="Assets/Screenshots/ActiveShots.png" title="Repel the enemies!" width="650px" height="430px">
