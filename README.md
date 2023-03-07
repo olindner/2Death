@@ -37,8 +37,9 @@ While there will likely always be design and UI updates, I am most focused on cr
 
 This project was originally started to compete in a game jam, but turned into an effort of understanding how state-based games work. I have always been fascinated by tower-defense games, so I was curious how difficult it was to create one from scratch!
 
-**Screenshots**
+"2Death" was chosen as the name early on because I wanted to take a break from 3D games and this was my first real attempt at a 2D game. I knew that I wanted it to be a castle-defender game, so I imagined that the endless waves would be marching "2Death" with a fun "2D" pun slipped in the title!
 
+**Screenshots**
 
 <img align="left" width="33%" src="Assets/Screenshots/WizardWallNEW.png" title="Build your defenses!" width="200px" height="800px"> 
 <img align="center" src="Assets/Screenshots/BuyMenuNEW.png" title="Use your arsenal to defend your Wizard's castle!" width="350px" height="350px"> 
